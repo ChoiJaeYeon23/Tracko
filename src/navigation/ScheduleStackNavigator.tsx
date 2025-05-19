@@ -17,6 +17,7 @@ export type ScheduleStackParamList = {
     TaskListScreen: undefined
 }
 
+
 const Stack = createStackNavigator<ScheduleStackParamList>()
 
 const ScheduleStackNavigator = () => {
