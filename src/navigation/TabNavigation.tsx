@@ -3,7 +3,6 @@ import {
     AnalysisScreen,
     HomeScreen,
     LedgerScreen,
-    ScheduleScreen,
     SettingScreen
 } from '../screens'
 import ScheduleStackNavigator from './ScheduleStackNavigator'
