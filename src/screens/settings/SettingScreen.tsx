@@ -31,14 +31,7 @@ const SettingScreen = () => {
                     />
                 </View>
 
-                <View>
-                    <Text>테마 설정</Text>
-                    <Switch
-                        value={isDarkMode}
-                        onValueChange={toggleTheme}
-                        trackColor={{ false: '#767577', true: '#666666' }}
-                    />
-                </View>
+
             </View>
         </SafeAreaView>
     )
