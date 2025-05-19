@@ -2056,8 +2056,8 @@ SPEC CHECKSUMS:
   ReactCommon: 4d0da92a5eb8da86c08e3ec34bd23ab439fb2461
   RNGestureHandler: 5d8431415d4b8518e86e289e9ad5bb9be78f6dba
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  Yoga: c758bfb934100bb4bf9cbaccb52557cee35e8bdf
+  Yoga: 9f110fc4b7aa538663cba3c14cbb1c335f43c13f
 
 PODFILE CHECKSUM: ae6feaa717f45ebbffaec77fdc21e4fd0adcddac
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.15.2
