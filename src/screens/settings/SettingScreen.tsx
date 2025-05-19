@@ -27,7 +27,7 @@ const SettingScreen = () => {
                     <Switch
                         value={isNotificationEnabled}
                         onValueChange={toggleNotification}
-                        trackColor={{ false: '#767577', true: '#777777' }}
+                        trackColor={{ false: '#767577', true: '#666666' }}
                     />
                 </View>
 
@@ -36,7 +36,7 @@ const SettingScreen = () => {
                     <Switch
                         value={isDarkMode}
                         onValueChange={toggleTheme}
-                        trackColor={{ false: '#767577', true: '#777777' }}
+                        trackColor={{ false: '#767577', true: '#666666' }}
                     />
                 </View>
             </View>
