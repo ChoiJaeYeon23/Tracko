@@ -1,7 +1,7 @@
 
 import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from '../screens/Home/HomeScreen';
-
+import HomeScreen from '../screens/home/HomeScreen';
+import TabNavigation from './TabNavigation';
 const Stack = createStackNavigator();
 
 const StackNavigation = () => {
