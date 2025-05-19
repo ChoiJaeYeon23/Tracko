@@ -3,22 +3,23 @@ import {
     AnalysisScreen,
     HomeScreen,
     LedgerScreen,
-    PlannerScreen,
+    ScheduleScreen,
     SettingScreen
 } from '../screens'
+import ScheduleStackNavigator from './ScheduleStackNavigator'
 
 const BottomTab = createBottomTabNavigator()
 
 const TabNavigation = () => {
     return (
-        <BottomTab.Navigator>
+        <BottomTab.Navigator screenOptions={{ headerShown: false }}>
             <BottomTab.Screen
                 name='LedgerScreen'
                 component={LedgerScreen}
             />
             <BottomTab.Screen
-                name='PlannerScreen'
-                component={PlannerScreen}
+                name='ScheduleTab'
+                component={ScheduleStackNavigator}
             />
             <BottomTab.Screen
                 name='HomeScreen'
