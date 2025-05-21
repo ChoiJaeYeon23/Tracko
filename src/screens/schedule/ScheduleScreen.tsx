@@ -5,7 +5,7 @@ import {
     Dimensions
 } from 'react-native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
-import { CalendarScreen, RoutineScreen, TaskListScreen } from '../../screens'
+import { CalendarScreen, RoutineScreen, TodoScreen, EventScreen } from '../../screens'
 import { FAB } from 'react-native-paper'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ScheduleStackParamList } from '../../navigation/ScheduleStackNavigator'
@@ -18,14 +18,14 @@ const ScheduleScreen = ({ navigation }: Props) => {
     const [index, setIndex] = useState(0)
     const [routes] = useState([
         { key: 'routine', title: '루틴' },
-        { key: 'taskList', title: '일정/투두' },
-        { key: 'calendar', title: '달력' }
+        { key: 'todo', title: '투두' },
+        { key: 'event', title: '일정' }
     ])
 
     const renderScene = SceneMap({
         routine: () => <RoutineScreen />,
-        taskList: () => <TaskListScreen />,
-        calendar: () => <CalendarScreen />
+        todo: () => <TodoScreen />,
+        event: () => <EventScreen />
     })
 
     const renderTabBar = (props: any) => (
@@ -44,8 +44,11 @@ const ScheduleScreen = ({ navigation }: Props) => {
             case 'routine':
                 navigation.navigate('RoutineFormScreen')
                 break
-            case 'taskList':
-                navigation.navigate('TaskListFormScreen')
+            case 'todo':
+                navigation.navigate('TodoFormScreen')
+                break
+            case 'event':
+                navigation.navigate('EventFormScreen')
                 break
             default:
                 break
@@ -54,6 +57,9 @@ const ScheduleScreen = ({ navigation }: Props) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
+                <CalendarScreen />
+            </View>
             <View style={{ flex: 1 }}>
                 <TabView
                     navigationState={{ index, routes }}
