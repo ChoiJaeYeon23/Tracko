@@ -10,21 +10,21 @@ import dayjs from 'dayjs'
 
 // 테스트용 더미 데이터. 추후 실제 데이터가 추가되면 삭제 예정
 const dummyRoutines: Routine[] = [
-    // 일요일
-    {
-        id: 'sun1',
-        title: '요가 클래스',
-        daysOfWeek: [0],
-        time: '08:00',
-        isCompleted: false
-    },
-    {
-        id: 'sun2',
-        title: '가족 전화',
-        daysOfWeek: [0],
-        time: '21:00',
-        isCompleted: false
-    },
+    // // 일요일
+    // {
+    //     id: 'sun1',
+    //     title: '요가 클래스',
+    //     daysOfWeek: [0],
+    //     time: '08:00',
+    //     isCompleted: false
+    // },
+    // {
+    //     id: 'sun2',
+    //     title: '가족 전화',
+    //     daysOfWeek: [0],
+    //     time: '21:00',
+    //     isCompleted: false
+    // },
     // 월요일
     {
         id: 'mon1',
@@ -131,12 +131,16 @@ const dummyRoutines: Routine[] = [
     }
 ]
 
-const RoutineScreen = () => {
+const RoutineScreen = (
+    { selectedDate }: { selectedDate: string }
+) => {
     const [routines, setRoutines] = useState<Routine[]>(dummyRoutines)
-    const today = dayjs().day()
-    const todaysRoutines = routines.filter(routine =>
-        routine.daysOfWeek.includes(today)
+
+    const selectedDay = dayjs(selectedDate).day()
+    const selectedRoutines = routines.filter(routine =>
+        routine.daysOfWeek.includes(selectedDay)
     )
+
     const toggleComplete = (id: string) => {
         setRoutines((prev) =>
             prev.map((routine) =>
@@ -149,10 +153,10 @@ const RoutineScreen = () => {
 
     const renderItem = ({ item }: { item: Routine }) => (
         <View style={{ marginLeft: 10, flexDirection: 'row', marginTop: 10, alignItems: 'center', height: 30 }}>
-            <Text style={{marginRight: 10}}>
-                {item.title} ({item.time || '시간 없음'})
+            <Text style={{ marginRight: 10 }}>
+                {item.title} {item.time || '시간 없음'}
             </Text>
-            <Text style={{marginRight: 10}}>
+            <Text style={{ marginRight: 10 }}>
                 {item.daysOfWeek.map((d) => ['일', '월', '화', '수', '목', '금', '토'][d]).join(', ')}
             </Text>
             <TouchableOpacity
@@ -168,7 +172,7 @@ const RoutineScreen = () => {
     return (
         <View>
             <FlatList
-                data={todaysRoutines}
+                data={selectedRoutines}
                 keyExtractor={(item) => item.id}
                 renderItem={renderItem}
                 contentContainerStyle={{ paddingBottom: 100 }}

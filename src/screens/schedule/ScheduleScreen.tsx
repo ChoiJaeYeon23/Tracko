@@ -9,6 +9,7 @@ import { CalendarScreen, RoutineScreen, TodoScreen, EventScreen } from '../../sc
 import { FAB } from 'react-native-paper'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ScheduleStackParamList } from '../../navigation/ScheduleStackNavigator'
+import dayjs from 'dayjs'
 
 const initialLayout = { width: Dimensions.get('window').width }
 
@@ -21,12 +22,20 @@ const ScheduleScreen = ({ navigation }: Props) => {
         { key: 'todo', title: '투두' },
         { key: 'event', title: '일정' }
     ])
+    const [selectedDate, setSelectedDate] = useState<string>(dayjs().format('YYYY-MM-DD'))
 
-    const renderScene = SceneMap({
-        routine: () => <RoutineScreen />,
-        todo: () => <TodoScreen />,
-        event: () => <EventScreen />
-    })
+    const renderScene = ({ route }: { route: { key: string } }) => {
+        switch (route.key) {
+            case 'routine':
+                return <RoutineScreen selectedDate={selectedDate} />
+            case 'todo':
+                return <TodoScreen selectedDate={selectedDate} />
+            case 'event':
+                return <EventScreen selectedDate={selectedDate} />
+            default:
+                return null
+        }
+    }
 
     const renderTabBar = (props: any) => (
         <TabBar
@@ -57,8 +66,11 @@ const ScheduleScreen = ({ navigation }: Props) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={{flex: 1}}>
-                <CalendarScreen />
+            <View style={{ flex: 1 }}>
+                <CalendarScreen
+                    selectedDate={selectedDate}
+                    onDateChange={setSelectedDate}
+                />
             </View>
             <View style={{ flex: 1 }}>
                 <TabView
@@ -69,7 +81,7 @@ const ScheduleScreen = ({ navigation }: Props) => {
                     renderTabBar={renderTabBar}
                 />
                 <FAB
-                    style={{position: 'absolute', right: 16, bottom: 16}}
+                    style={{ position: 'absolute', right: 16, bottom: 16 }}
                     icon='plus'
                     onPress={handleFabPress}
                 />
