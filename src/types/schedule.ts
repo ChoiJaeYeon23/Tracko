@@ -25,12 +25,12 @@ export interface Routine extends BaseSchedule {
 }
 
 /**
- * 투두 타입: 기한이 있는 일회성 할 일
- *  deadline - 마감 기한 (선택, 'YYYY-MM-DD' 형식)
+ * 투두 타입: 특정 날짜에 해야 할 일
+ *  date - 해야 하는 날짜 ('YYYY-MM-DD' 형식)
  *  isCompleted - 완료 여부
  */
 export interface Todo extends BaseSchedule {
-    deadline?: string
+    date: string
     isCompleted: boolean
 }
 
