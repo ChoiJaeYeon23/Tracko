@@ -7,16 +7,28 @@ import {
     ScrollView,
     Alert
 } from 'react-native'
-import { Event } from '../../../types'
+import { RouteProp, useRoute, useNavigation } from '@react-navigation/native'
+import uuid from 'react-native-uuid'
 import dayjs from 'dayjs'
+import { Event } from '../../../types'
+import { addEvent, updateEvent } from '../../../database'
+
+type EventFormScreenParams = {
+    mode: 'create' | 'edit'
+    event?: Event
+}
 
 const EventFormScreen = () => {
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
-    const [date, setDate] = useState('') // YYYY-MM-DD 형식 권장
-    const [startTime, setStartTime] = useState('') // HH:mm 형식 권장
-    const [endTime, setEndTime] = useState('') // HH:mm 형식 권장
-    const [location, setLocation] = useState('')
+    const route = useRoute<RouteProp<Record<string, EventFormScreenParams>, string>>()
+    const navigation = useNavigation()
+    const { mode, event } = route.params || { mode: 'create' }
+
+    const [title, setTitle] = useState(event?.title || '')
+    const [description, setDescription] = useState(event?.description || '')
+    const [date, setDate] = useState(event?.date || '')
+    const [startTime, setStartTime] = useState(event?.startTime || '')
+    const [endTime, setEndTime] = useState(event?.endTime || '')
+    const [location, setLocation] = useState(event?.location || '')
 
     const handleSubmit = () => {
         if (!title.trim()) {
@@ -37,7 +49,7 @@ const EventFormScreen = () => {
         }
 
         const newEvent: Event = {
-            id: Date.now().toString(),
+            id: event?.id || uuid.v4(),
             title: title.trim(),
             description: description.trim() || undefined,
             date: date.trim(),
@@ -46,8 +58,20 @@ const EventFormScreen = () => {
             location: location.trim() || undefined,
         }
 
-        console.log('저장할 이벤트:', newEvent)
-        // 실제 저장 로직 추가 예정
+        try {
+            if (mode === 'edit') {
+                console.log('수정할 이벤트:', newEvent)
+                updateEvent(newEvent)
+            } else {
+                console.log('추가할 이벤트:', newEvent)
+                addEvent(newEvent)
+            }
+
+            navigation.goBack()
+        } catch (error) {
+            console.error('[EventFormScreen][Failed] 이벤트 저장 오류:', error)
+            Alert.alert('저장 실패', '이벤트 저장 중 오류가 발생했습니다. 다시 시도해주세요.')
+        }
     }
 
     return (

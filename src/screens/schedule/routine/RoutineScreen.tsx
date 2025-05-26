@@ -1,160 +1,83 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
     View,
     Text,
     FlatList,
     TouchableOpacity,
+    Alert,
 } from 'react-native'
-import { Routine } from '../../../types'
+import { useFocusEffect } from '@react-navigation/native'
 import dayjs from 'dayjs'
-
-// 테스트용 더미 데이터. 추후 실제 데이터가 추가되면 삭제 예정
-const dummyRoutines: Routine[] = [
-    // // 일요일
-    // {
-    //     id: 'sun1',
-    //     title: '요가 클래스',
-    //     daysOfWeek: [0],
-    //     time: '08:00',
-    //     isCompleted: false
-    // },
-    // {
-    //     id: 'sun2',
-    //     title: '가족 전화',
-    //     daysOfWeek: [0],
-    //     time: '21:00',
-    //     isCompleted: false
-    // },
-    // 월요일
-    {
-        id: 'mon1',
-        title: '아침 러닝',
-        daysOfWeek: [1],
-        time: '07:30',
-        isCompleted: false
-    },
-    {
-        id: 'mon2',
-        title: '업무 계획 세우기',
-        daysOfWeek: [1],
-        time: '09:00',
-        isCompleted: false
-    },
-    {
-        id: 'mon3',
-        title: '독서 30분',
-        daysOfWeek: [1],
-        time: '22:00',
-        isCompleted: false
-    },
-    // 화요일
-    {
-        id: 'tue1',
-        title: 'PT 수업',
-        daysOfWeek: [2],
-        time: '18:00',
-        isCompleted: false
-    },
-    {
-        id: 'tue2',
-        title: '명상',
-        daysOfWeek: [2],
-        time: '22:30',
-        isCompleted: false
-    },
-    // 수요일
-    {
-        id: 'wed1',
-        title: '영어 회화',
-        daysOfWeek: [3],
-        time: '20:00',
-        isCompleted: false
-    },
-    {
-        id: 'wed2',
-        title: '주간 회의 준비',
-        daysOfWeek: [3],
-        time: '10:00',
-        isCompleted: false
-    },
-    // 목요일
-    {
-        id: 'thu1',
-        title: '블로그 글쓰기',
-        daysOfWeek: [4],
-        time: '23:00',
-        isCompleted: false
-    },
-    {
-        id: 'thu2',
-        title: '설거지 몰아서 하기',
-        daysOfWeek: [4],
-        time: '20:00',
-        isCompleted: false
-    },
-    // 금요일
-    {
-        id: 'fri1',
-        title: '청소하기',
-        daysOfWeek: [5],
-        time: '19:00',
-        isCompleted: false
-    },
-    {
-        id: 'fri2',
-        title: '한 주 회고',
-        daysOfWeek: [5],
-        time: '22:00',
-        isCompleted: false
-    },
-    {
-        id: 'fri3',
-        title: '맥주 한 잔',
-        daysOfWeek: [5],
-        time: '23:30',
-        isCompleted: false
-    },
-    // 토요일
-    {
-        id: 'sat1',
-        title: '마트 장보기',
-        daysOfWeek: [6],
-        time: '15:00',
-        isCompleted: false
-    },
-    {
-        id: 'sat2',
-        title: '친구 만나기',
-        daysOfWeek: [6],
-        time: '18:00',
-        isCompleted: false
-    }
-]
+import {
+    getAllRoutines,
+    getRoutineCompletionMap,
+    updateRoutineCompletionMap
+} from '../../../database'
+import { Routine } from '../../../types'
 
 const RoutineScreen = (
     { selectedDate }: { selectedDate: string }
 ) => {
-    const [routines, setRoutines] = useState<Routine[]>(dummyRoutines)
+    const [routines, setRoutines] = useState<Routine[]>([])
+    const [completionMap, setCompletionMap] = useState<{ [date: string]: string[] }>({})
 
     const selectedDay = dayjs(selectedDate).day()
+    const dateKey = dayjs(selectedDate).format('YYYY-MM-DD')
+
+    const fetchRoutines = async () => {
+        try {
+            const routinesStorage = getAllRoutines()
+            const completionStorage = await getRoutineCompletionMap()
+            setRoutines(routinesStorage)
+            setCompletionMap(completionStorage)
+
+            console.log('[RoutineScreen][Success] 루틴 불러오기 성공')
+        } catch (error) {
+            console.error('[RoutineScreen][Failed] 루틴 불러오기 실패')
+            Alert.alert('루틴을 불러오지 못했습니다')
+        }
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchRoutines()
+        }, [])
+    )
+
     const selectedRoutines = routines.filter(routine =>
         routine.daysOfWeek.includes(selectedDay)
     )
 
-    const toggleComplete = (id: string) => {
-        setRoutines((prev) =>
-            prev.map((routine) =>
-                routine.id === id
-                    ? { ...routine, isCompleted: !routine.isCompleted }
-                    : routine
-            )
-        )
+    const isRoutineCompleted = (id: string): boolean => {
+        return completionMap[dateKey]?.includes(id) ?? false
+    }
+
+    const toggleComplete = async (id: string) => {
+        const prevList = completionMap[dateKey] ?? []
+
+        const updatedList = prevList.includes(id)
+            ? prevList.filter(routineId => routineId !== id)
+            : [...prevList, id]
+        
+        const updatedMap = {
+            ...completionMap,
+            [dateKey]: updatedList
+        }
+
+        try {
+            await updateRoutineCompletionMap(updatedMap)
+            setCompletionMap(updatedMap)
+            console.log('[RoutineScreen][Success] 완료 상태 업데이트 성공')
+        } catch (error) {
+            console.error('[RoutineScreen][Failed] 완료 상태 업데이트 실패:', error)
+            Alert.alert('루틴 완료 상태 저장에 실패했습니다.')
+        }
     }
 
     const renderItem = ({ item }: { item: Routine }) => (
         <View style={{ marginLeft: 10, flexDirection: 'row', marginTop: 10, alignItems: 'center', height: 30 }}>
             <Text style={{ marginRight: 10 }}>
-                {item.title} {item.time || '시간 없음'}
+                {item.title} {item.time && item.time}
             </Text>
             <Text style={{ marginRight: 10 }}>
                 {item.daysOfWeek.map((d) => ['일', '월', '화', '수', '목', '금', '토'][d]).join(', ')}
@@ -163,7 +86,7 @@ const RoutineScreen = (
                 onPress={() => toggleComplete(item.id)}
             >
                 <Text style={{ fontSize: 18 }}>
-                    {item.isCompleted ? '☑' : '☐'}
+                    {isRoutineCompleted(item.id) ? '☑' : '☐'}
                 </Text>
             </TouchableOpacity>
         </View>

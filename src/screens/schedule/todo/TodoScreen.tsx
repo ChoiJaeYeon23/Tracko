@@ -1,40 +1,42 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import {
     View,
     Text,
     FlatList,
     TouchableOpacity
 } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
 import { Todo } from '../../../types'
-
-// 테스트용 더미 데이터
-const dummyTodos: Todo[] = [
-    {
-        id: '1',
-        title: '리액트 네이티브 공부하기',
-        description: 'TypeScript로 컴포넌트 작성 연습',
-        tags: ['공부', '개발'],
-        date: '2025-05-22',
-        isCompleted: false,
-    },
-    {
-        id: '2',
-        title: '운동 가기',
-        tags: ['건강'],
-        date: '2025-05-13',
-        isCompleted: true,
-    },
-]
+import {
+    getAllTodos,
+    updateTodo
+} from '../../../database'
 
 const TodoScreen = (
     { selectedDate }: { selectedDate: string }
 ) => {
-    const [todos, setTodos] = useState<Todo[]>(dummyTodos)
+    const [todos, setTodos] = useState<Todo[]>([])
+
+    const fetchTodos = () => {
+        const todosStorage = getAllTodos()
+        setTodos(todosStorage)
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchTodos()
+        }, [])
+    )
 
     const toggleComplete = (id: string) => {
-        const updated = todos.map(todo =>
-            todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
-        )
+        const updated = todos.map(todo => {
+            if (todo.id === id) {
+                const toggledTodo = { ...todo, isCompleted: !todo.isCompleted }
+                updateTodo(toggledTodo)
+                return toggledTodo
+            }
+            return todo
+        })
         setTodos(updated)
     }
 

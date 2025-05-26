@@ -1,39 +1,22 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import {
     View,
     Text,
-    FlatList,
     SectionList
 } from 'react-native'
-import { Event } from '../../../types'
+import { useFocusEffect } from '@react-navigation/native'
 import dayjs from 'dayjs'
+import { Event } from '../../../types'
+import { getAllEvents } from '../../../database'
 
 // 선택한 날짜 기준 이번 주 월요일, 일요일 구하는 함수
 const getWeekRange = (date: dayjs.Dayjs) => {
     const day = date.day() // 0(일) ~ 6(토)
     const monday = date.subtract(day === 0 ? 6 : day - 1, 'day') // 일요일이면 -6일, 그 외는 (요일-1)일 뺌
     const sunday = monday.add(6, 'day')
+    console.log('[getWeekRange] monday:', monday.format('YYYY-MM-DD'), ', sunday:', sunday.format('YYYY-MM-DD'))
     return { monday, sunday }
 }
-
-// 테스트용 더미 데이터
-const dummyEvents: Event[] = [
-    { id: '1', title: '스터디 모임', date: '2025-05-19', location: '카페' },
-    { id: '2', title: '헬스', date: '2025-05-21', location: '헬스장' },
-    { id: '3', title: '면접', date: '2025-05-23', location: '강남' },
-    { id: '4', title: '가족 식사', date: '2025-05-25', location: '식당' },
-    { id: '5', title: '치과 예약', date: '2025-05-30', location: '치과' },
-    { id: '6', title: '책 읽기', date: '2025-05-21', location: '도서관' },
-    { id: '7', title: '친구 만나기', date: '2025-05-19', location: '카페' },
-    { id: '8', title: '영화 관람', date: '2025-05-23', location: '영화관' },
-    { id: '9', title: '운동하기', date: '2025-05-24', location: '헬스장' },
-    { id: '10', title: '회의', date: '2025-05-25', location: '사무실' },
-    { id: '11', title: '마트 장보기', date: '2025-05-26', location: '마트' },
-    { id: '12', title: '카페에서 작업', date: '2025-05-21', location: '카페' },
-    { id: '13', title: '요가 수업', date: '2025-05-27', location: '요가센터' },
-    { id: '14', title: '개발 공부', date: '2025-05-19', location: '집' },
-    { id: '15', title: '가족 전화', date: '2025-05-30', location: '집' },
-]
 
 const EventScreen = (
     { selectedDate }: { selectedDate: string }
@@ -41,14 +24,19 @@ const EventScreen = (
     const selectedDay = dayjs(selectedDate).startOf('day')
     const { monday, sunday } = getWeekRange(selectedDay)
 
-    const { selectedDayEvents, weekEvents } = useMemo(() => {
-        // 선택한 날짜 일정 필터
-        const selectedDayEvents = dummyEvents.filter(event =>
-            dayjs(event.date).startOf('day').isSame(selectedDay, 'day')
-        )
+    const [selectedDayEvents, setSelectedDayEvents] = useState<Event[]>([])
+    const [weekEvents, setWeekEvents] = useState<Event[]>([])
 
-        // 선택한 날짜에 해당하는 주 일정 필터 (선택한 날짜 제외)
-        const weekEvents = dummyEvents.filter(event => {
+    const fetchEvents = useCallback(() => {
+        console.log('[fetchEvents] 시작')
+        const allEvents = getAllEvents()
+
+        const filteredSelectedDay = allEvents.filter(event => {
+            const isSame = dayjs(event.date).startOf('day').isSame(selectedDay, 'day')
+            return isSame
+        })
+
+        const filteredWeek = allEvents.filter(event => {
             const d = dayjs(event.date).startOf('day')
             const start = monday.startOf('day')
             const end = sunday.startOf('day')
@@ -62,8 +50,15 @@ const EventScreen = (
             return isInRange && isNotSelectedDay
         })
 
-        return { selectedDayEvents, weekEvents }
+        setSelectedDayEvents(filteredSelectedDay)
+        setWeekEvents(filteredWeek)
     }, [selectedDate])
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchEvents()
+        }, [selectedDate])
+    )
 
     const sections = [
         {
@@ -77,6 +72,8 @@ const EventScreen = (
             isEmpty: weekEvents.length === 0,
         },
     ].filter(section => section.data.length > 0)
+
+    console.log('[render] sections:', sections)
 
     return (
         <View style={{ padding: 10, flex: 1 }}>

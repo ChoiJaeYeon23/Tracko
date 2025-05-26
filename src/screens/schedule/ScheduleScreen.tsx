@@ -1,15 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     SafeAreaView,
     View,
     Dimensions
 } from 'react-native'
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
-import { CalendarScreen, RoutineScreen, TodoScreen, EventScreen } from '../../screens'
-import { FAB } from 'react-native-paper'
 import { StackScreenProps } from '@react-navigation/stack'
-import { ScheduleStackParamList } from '../../navigation/ScheduleStackNavigator'
+import { TabView, TabBar } from 'react-native-tab-view'
+import { FAB } from 'react-native-paper'
 import dayjs from 'dayjs'
+import {
+    CalendarScreen,
+    RoutineScreen,
+    TodoScreen,
+    EventScreen
+} from '../../screens'
+import { ScheduleStackParamList } from '../../navigation/ScheduleStackNavigator'
 
 const initialLayout = { width: Dimensions.get('window').width }
 
@@ -36,6 +41,8 @@ const ScheduleScreen = ({ navigation }: Props) => {
                 return null
         }
     }
+
+    
 
     const renderTabBar = (props: any) => (
         <TabBar

@@ -8,9 +8,11 @@ import {
     Alert
 } from 'react-native'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
-import { Routine } from '../../../types'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import dayjs from 'dayjs'
+import uuid from 'react-native-uuid'
+import { addRoutine, updateRoutine } from '../../../database'
+import { Routine } from '../../../types'
 
 const daysKor = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -45,26 +47,43 @@ const RoutineFormScreen = () => {
     }
 
     const handleSubmit = () => {
-        if (!title.trim() || daysOfWeek.length === 0) {
-            Alert.alert('제목과 요일을 선택해주세요')
+        if (!title.trim()) {
+            Alert.alert('제목을 입력해주세요.')
+            return
+        }
+        else if (daysOfWeek.length === 0) {
+            Alert.alert('요일을 선택해주세요.')
             return
         }
 
         const newRoutine: Routine = {
-            id: routine?.id || Date.now().toString(),
+            id: routine?.id || uuid.v4(),
             title,
             daysOfWeek,
             time,
-            isCompleted: false,
         }
 
-        if (mode === 'edit') {
-            // 수정 시 처리 로직 (예: setRoutines(prev => 수정)
-        } else {
-            // 등록 시 처리 로직 (예: setRoutines(prev => [...prev, newRoutine])
-        }
+        try {
+            if (mode === 'edit') {
+                console.log('수정할 루틴은:', newRoutine)
+                updateRoutine(newRoutine)
+            } else {
+                console.log('추가할 루틴은:', newRoutine)
+                addRoutine(newRoutine)
+            }
 
-        navigation.goBack()
+            navigation.goBack()
+        } catch (error) {
+            console.error('[RoutineFormScreen] 루틴 저장 중 오류 발생:', error)
+            Alert.alert('다시 시도해주세요', '루틴 저장에 실패했습니다.',
+                [
+                    {
+                        text: '확인',
+                        style: 'default'
+                    }
+                ]
+            )
+        }
     }
 
     return (
