@@ -16,12 +16,10 @@ export interface BaseSchedule {
  * 루틴 타입: 특정 요일과 시간에 반복되는 주간 스케줄
  *  daysOfWeek - 반복되는 요일 배열 (0=일요일 ~ 6=토요일)
  *  time - 작업 시간 (선택, 'HH:mm' 형식)
- *  isCompleted - 완료 여부
  */
 export interface Routine extends BaseSchedule {
     daysOfWeek: number[]
     time?: string
-    isCompleted: boolean
 }
 
 /**
@@ -46,4 +44,15 @@ export interface Event extends BaseSchedule {
     startTime?: string
     endTime?: string
     location?: string
+}
+
+/**
+ * 루틴 완료 기록: 날짜별로 완료된 루틴 ID 목록을 저장
+ *  {
+ *      '2025-05-26': ['routineId1', 'routineId2'],
+ *      '2025-05-27': ['routineId3']
+ *  }
+ */
+export interface RoutineCompletionMap {
+    [date: string]: string[]
 }
