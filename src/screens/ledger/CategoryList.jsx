@@ -11,7 +11,7 @@ const sampleData = [
 const CategoryList = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>카테고리별 지출</Text>
+      <Text style={styles.header}>카테고리별 지출이긴한데 테스트좀 해볼게</Text>
       {sampleData.map((item, idx) => (
         <View key={idx} style={styles.row}>
           <Text style={styles.category}>{item.category}</Text>
