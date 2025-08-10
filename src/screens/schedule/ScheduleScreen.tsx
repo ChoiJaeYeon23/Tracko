@@ -73,13 +73,13 @@ const ScheduleScreen = ({ navigation }: Props) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={{ flex: 0.3 }}>
+            <View style={{ flex: 0.7 }}>
                 <CalendarScreen
                     selectedDate={selectedDate}
                     onDateChange={setSelectedDate}
                 />
             </View>
-            <View style={{ flex: 0.7 }}>
+            <View style={{ flex: 0.3 }}>
                 <TabView
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
