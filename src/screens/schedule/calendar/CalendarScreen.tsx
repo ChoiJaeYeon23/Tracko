@@ -21,18 +21,36 @@ const CalendarScreen = (
 
     const startOfMonth = currentDate.startOf('month')
     const endOfMonth = currentDate.endOf('month')
-    const startDay = startOfMonth.day()
+    const startDay = startOfMonth.day() // 0=일요일, 1=월요일, ..., 6=토요일
     const daysInMonth = endOfMonth.date()
 
     const dates: (dayjs.Dayjs | null)[] = []
 
+    // 월의 첫 번째 날이 시작되는 요일까지 빈 칸 추가
     for (let i = 0; i < startDay; i++) {
         dates.push(null)
     }
 
-    for (let i = 1; i <= daysInMonth; i++) {
-        dates.push(startOfMonth.date(i))
+// 해당 월의 모든 날짜 추가
+for (let i = 1; i <= daysInMonth; i++) {
+    const currentDate = startOfMonth.clone().add(i - 1, 'day')
+    dates.push(currentDate)
+}
+
+    // 7의 배수로 맞추기 위해 마지막 주에 빈 칸 추가
+    const remainingCells = 7 - (dates.length % 7)
+    if (remainingCells < 7 && remainingCells > 0) {
+        for (let i = 0; i < remainingCells; i++) {
+            dates.push(null)
+        }
     }
+
+    // 디버깅용 로그
+    console.log('startDay:', startDay)
+    console.log('daysInMonth:', daysInMonth)
+    console.log('dates length:', dates.length)
+    console.log('remainingCells:', remainingCells)
+    console.log('dates array:', dates.map(d => d ? d.format('DD') : 'null'))
 
     const renderDot = (date: dayjs.Dayjs) => {
         const formatted = date.format('YYYY-MM-DD')
@@ -99,6 +117,7 @@ const CalendarScreen = (
     const isSelected = (date: dayjs.Dayjs) => {
         return date.format('YYYY-MM-DD') === selectedDate
     }
+
     return (
         <View style={{ padding: 20 }}>
             {/* 월 이동 헤더 */}
@@ -129,41 +148,45 @@ const CalendarScreen = (
             </View>
 
             {/* 날짜 셀 */}
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                {dates.map((date, index) => {
-                    if (!date) {
-                        return <View key={index} style={{ width: `${100 / 7}%`, height: 60 }} />
-                    }
+            <View style={{ marginBottom: 40 }}>
+                {Array.from({ length: Math.ceil(dates.length / 7) }, (_, weekIndex) => (
+                    <View key={weekIndex} style={{ flexDirection: 'row', marginBottom: 12 }}>
+                        {dates.slice(weekIndex * 7, (weekIndex + 1) * 7).map((date, dayIndex) => {
+                            if (!date) {
+                                return <View key={dayIndex} style={{ flex: 1, height: 60 }} />
+                            }
 
-                    const formatted = date.format('YYYY-MM-DD')
-                    const selected = isSelected(date)
+                            const formatted = date.format('YYYY-MM-DD')
+                            const selected = isSelected(date)
 
-                    return (
-                        <TouchableOpacity
-                            key={index}
-                            onPress={() => onDateChange(formatted)}
-                            style={{
-                                width: `${100 / 7}%`,
-                                height: 60,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <View style={{
-                                width: 32, height: 32,
-                                borderRadius: 16,
-                                backgroundColor: selected ? '#4b9eff' : 'transparent',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}>
-                                <Text style={{ fontSize: 14, color: selected ? '#fff' : '#000' }}>
-                                    {date.date()}
-                                </Text>
-                            </View>
-                            {renderDot(date)}
-                        </TouchableOpacity>
-                    )
-                })}
+                            return (
+                                <TouchableOpacity
+                                    key={dayIndex}
+                                    onPress={() => onDateChange(formatted)}
+                                    style={{
+                                        flex: 1,
+                                        height: 60,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <View style={{
+                                        width: 32, height: 32,
+                                        borderRadius: 16,
+                                        backgroundColor: selected ? '#4b9eff' : 'transparent',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}>
+                                        <Text style={{ fontSize: 14, color: selected ? '#fff' : '#000' }}>
+                                            {date.date()}
+                                        </Text>
+                                    </View>
+                                    {renderDot(date)}
+                                </TouchableOpacity>
+                            )
+                        })}
+                    </View>
+                ))}
             </View>
         </View>
     )
