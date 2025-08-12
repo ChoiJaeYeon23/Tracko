@@ -81,6 +81,7 @@ const ScheduleScreen = ({ navigation }: Props) => {
             </View>
             <View style={{ flex: 0.3 }}>
                 <TabView
+                    key={selectedDate}
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
                     onIndexChange={setIndex}

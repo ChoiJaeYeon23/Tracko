@@ -4,12 +4,7 @@ import {
     TouchableOpacity,
 } from 'react-native'
 import dayjs from 'dayjs'
-import { useState } from 'react'
-
-// 테스트용 더미데이터, 루틴은 요일 기반 저장
-const routineDays = [1, 3, 5]
-const todos = ['2025-05-03', '2025-05-15', '2025-05-21']
-const events = ['2025-05-01', '2025-05-20', '2025-05-25']
+import { useState, useEffect } from 'react'
 
 const CalendarScreen = (
     { selectedDate, onDateChange }: {
@@ -18,6 +13,17 @@ const CalendarScreen = (
     }
 ) => {
     const [currentDate, setCurrentDate] = useState(dayjs())
+
+    // selectedDate가 변경될 때 currentDate 동기화
+    useEffect(() => {
+        setCurrentDate(dayjs(selectedDate))
+    }, [selectedDate])
+
+    // 현재 월에 맞는 가라데이터 동적 생성
+    const currentMonth = currentDate.format('YYYY-MM')
+    const routineDays = [1, 3, 5] // 월요일, 수요일, 금요일
+    const todos = [`${currentMonth}-03`, `${currentMonth}-15`, `${currentMonth}-21`]
+    const events = [`${currentMonth}-01`, `${currentMonth}-20`, `${currentMonth}-25`]
 
     const startOfMonth = currentDate.startOf('month')
     const endOfMonth = currentDate.endOf('month')

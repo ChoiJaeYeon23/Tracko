@@ -2,12 +2,14 @@ import { useMemo, useState, useCallback } from 'react'
 import {
     View,
     Text,
-    SectionList
+    SectionList,
+    TouchableOpacity,
+    Alert
 } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import dayjs from 'dayjs'
 import { Event } from '../../../types'
-import { getAllEvents } from '../../../database'
+import { getAllEvents, deleteEvent } from '../../../database'
 
 // 선택한 날짜 기준 이번 주 월요일, 일요일 구하는 함수
 const getWeekRange = (date: dayjs.Dayjs) => {
@@ -60,6 +62,31 @@ const EventScreen = (
         }, [selectedDate])
     )
 
+    const handleDeleteEvent = (event: Event) => {
+        Alert.alert(
+            '일정 삭제',
+            `"${event.title}" 일정을 삭제하시겠습니까?`,
+            [
+                { text: '취소', style: 'cancel' },
+                {
+                    text: '삭제',
+                    style: 'destructive',
+                    onPress: () => {
+                        try {
+                            deleteEvent(event.id)
+                            // 일정 목록 새로고침
+                            fetchEvents()
+                            Alert.alert('삭제 완료', '일정이 삭제되었습니다.')
+                        } catch (error) {
+                            console.error('[EventScreen] 일정 삭제 실패:', error)
+                            Alert.alert('삭제 실패', '일정 삭제에 실패했습니다.')
+                        }
+                    }
+                }
+            ]
+        )
+    }
+
     const sections = [
         {
             title: selectedDay.format('YYYY년 M월 D일 일정'),
@@ -93,10 +120,33 @@ const EventScreen = (
                     }
 
                     return (
-                        <View style={{ padding: 12, backgroundColor: '#f9f9f9', borderRadius: 8, marginBottom: 10 }}>
-                            <Text style={{ fontSize: 16, fontWeight: '600' }}>{item.title}</Text>
-                            <Text style={{ color: '#555' }}>날짜: {dayjs(item.date).format('YYYY-MM-DD')}</Text>
-                            {item.location && <Text style={{ color: '#555' }}>장소: {item.location}</Text>}
+                        <View style={{ 
+                            padding: 12, 
+                            backgroundColor: '#f9f9f9', 
+                            borderRadius: 8, 
+                            marginBottom: 10,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}>
+                            <View style={{ flex: 1 }}>
+                                <Text style={{ fontSize: 16, fontWeight: '600' }}>{item.title}</Text>
+                                <Text style={{ color: '#555' }}>날짜: {dayjs(item.date).format('YYYY-MM-DD')}</Text>
+                                {item.location && <Text style={{ color: '#555' }}>장소: {item.location}</Text>}
+                            </View>
+                            
+                            <TouchableOpacity
+                                onPress={() => handleDeleteEvent(item)}
+                                style={{
+                                    backgroundColor: '#ff4444',
+                                    paddingHorizontal: 8,
+                                    paddingVertical: 4,
+                                    borderRadius: 4,
+                                    marginLeft: 10
+                                }}
+                            >
+                                <Text style={{ color: 'white', fontSize: 12 }}>삭제</Text>
+                            </TouchableOpacity>
                         </View>
                     )
                 }}
