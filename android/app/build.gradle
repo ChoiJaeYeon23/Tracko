@@ -105,6 +105,13 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    
+    // Vector Icons 폰트 복사
+    sourceSets {
+        main {
+            assets.srcDirs += ['../../node_modules/react-native-vector-icons/Fonts']
+        }
+    }
 }
 
 dependencies {
@@ -116,4 +123,7 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+    
+    // Vector Icons
+    implementation project(':react-native-vector-icons')
 }
