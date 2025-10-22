@@ -7,7 +7,9 @@ import {
     Button,
     Alert,
     Modal,
-    StyleSheet
+    StyleSheet,
+    TouchableWithoutFeedback,
+    Keyboard
 } from 'react-native'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import DateTimePicker from '@react-native-community/datetimepicker'
@@ -15,6 +17,7 @@ import dayjs from 'dayjs'
 import uuid from 'react-native-uuid'
 import { addRoutine, updateRoutine } from '../../../database'
 import { Routine } from '../../../types'
+import { Header } from '../../../components'
 
 const daysKor = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -33,6 +36,14 @@ const RoutineFormScreen = () => {
     const [time, setTime] = useState<string | undefined>(routine?.time)
     const [showTimePicker, setShowTimePicker] = useState(false)
     const [tempTime, setTempTime] = useState<Date | null>(null)
+
+    // 시간 선택기 초기값 설정
+    const getInitialTime = () => {
+        if (tempTime) return tempTime
+        if (time) return dayjs(time, 'HH:mm').toDate()
+        // 기본값을 오전 9시로 설정
+        return dayjs().hour(9).minute(0).second(0).millisecond(0).toDate()
+    }
 
     const toggleDay = (day: number) => {
         setDaysOfWeek(prev =>
@@ -103,9 +114,12 @@ const RoutineFormScreen = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>루틴 {mode === 'edit' ? '수정' : '추가'}</Text>
-            </View>
+            <Header 
+                title={`루틴 ${mode === 'edit' ? '수정' : '추가'}`}
+                showBackButton={true}
+            />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={styles.content}>
 
             <View style={styles.section}>
                 <Text style={styles.label}>루틴 제목</Text>
@@ -144,7 +158,17 @@ const RoutineFormScreen = () => {
             <View style={styles.section}>
                 <Text style={styles.label}>시간 선택 (선택)</Text>
                 <TouchableOpacity
-                    onPress={() => setShowTimePicker(true)}
+                    onPress={() => {
+                        // 시간 선택기 열 때 적절한 초기값 설정
+                        if (!tempTime) {
+                            if (time) {
+                                setTempTime(dayjs(time, 'HH:mm').toDate())
+                            } else {
+                                setTempTime(dayjs().hour(9).minute(0).second(0).millisecond(0).toDate())
+                            }
+                        }
+                        setShowTimePicker(true)
+                    }}
                     style={styles.timeButton}
                 >
                     <Text style={styles.timeButtonText}>
@@ -171,12 +195,14 @@ const RoutineFormScreen = () => {
                         
                         <View style={styles.timePickerContainer}>
                             <DateTimePicker
-                                value={tempTime || (time ? dayjs(time, 'HH:mm').toDate() : new Date())}
+                                value={getInitialTime()}
                                 mode="time"
                                 is24Hour={true}
                                 display="spinner"
                                 onChange={handleTimeChange}
                                 style={styles.timePicker}
+                                minimumDate={dayjs().hour(0).minute(0).second(0).millisecond(0).toDate()}
+                                maximumDate={dayjs().hour(23).minute(59).second(59).millisecond(999).toDate()}
                             />
                         </View>
                         
@@ -203,6 +229,8 @@ const RoutineFormScreen = () => {
                     {mode === 'edit' ? '수정하기' : '등록하기'}
                 </Text>
             </TouchableOpacity>
+                </View>
+            </TouchableWithoutFeedback>
         </View>
     )
 }
@@ -212,24 +240,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFBF0',
-        padding: 20,
     },
-    header: {
-        backgroundColor: '#FFE082',
+    content: {
+        flex: 1,
         padding: 20,
-        borderRadius: 15,
-        marginBottom: 25,
-        shadowColor: '#FFC107',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 5,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: '700',
-        color: '#E65100',
-        textAlign: 'center',
     },
     section: {
         marginBottom: 25,

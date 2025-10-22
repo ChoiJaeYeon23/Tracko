@@ -5,13 +5,17 @@ import {
     TextInput,
     TouchableOpacity,
     ScrollView,
-    Alert
+    Alert,
+    StyleSheet,
+    TouchableWithoutFeedback,
+    Keyboard
 } from 'react-native'
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native'
 import uuid from 'react-native-uuid'
 import dayjs from 'dayjs'
 import { Event } from '../../../types'
 import { addEvent, updateEvent } from '../../../database'
+import { Header } from '../../../components'
 
 type EventFormScreenParams = {
     mode: 'create' | 'edit'
@@ -75,110 +79,160 @@ const EventFormScreen = () => {
     }
 
     return (
-        <ScrollView contentContainerStyle={{ padding: 20 }}>
-            <Text style={{ fontSize: 16, marginBottom: 8 }}>제목 *</Text>
-            <TextInput
-                value={title}
-                onChangeText={setTitle}
-                placeholder="일정 제목을 입력하세요"
-                style={{
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    borderRadius: 4,
-                    padding: 10,
-                    marginBottom: 16,
-                }}
+        <View style={styles.container}>
+            <Header 
+                title={`일정 ${mode === 'edit' ? '수정' : '추가'}`}
+                showBackButton={true}
             />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <ScrollView style={styles.content}>
 
-            <Text style={{ fontSize: 16, marginBottom: 8 }}>설명</Text>
-            <TextInput
-                value={description}
-                onChangeText={setDescription}
-                placeholder="설명을 입력하세요"
-                multiline
-                style={{
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    borderRadius: 4,
-                    padding: 10,
-                    marginBottom: 16,
-                    height: 80,
-                    textAlignVertical: 'top',
-                }}
-            />
+                <View style={styles.section}>
+                    <Text style={styles.label}>일정 제목</Text>
+                    <TextInput
+                        value={title}
+                        onChangeText={setTitle}
+                        placeholder="제목 입력"
+                        style={styles.input}
+                        placeholderTextColor="#999"
+                    />
+                </View>
 
-            <Text style={{ fontSize: 16, marginBottom: 8 }}>날짜 (YYYY-MM-DD) *</Text>
-            <TextInput
-                value={date}
-                onChangeText={setDate}
-                placeholder="2025-05-22"
-                keyboardType="number-pad"
-                style={{
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    borderRadius: 4,
-                    padding: 10,
-                    marginBottom: 16,
-                }}
-            />
+                <View style={styles.section}>
+                    <Text style={styles.label}>설명</Text>
+                    <TextInput
+                        value={description}
+                        onChangeText={setDescription}
+                        placeholder="설명을 입력하세요"
+                        multiline
+                        style={[styles.input, styles.textArea]}
+                        placeholderTextColor="#999"
+                        textAlignVertical="top"
+                    />
+                </View>
 
-            <Text style={{ fontSize: 16, marginBottom: 8 }}>시작 시간 (HH:mm)</Text>
-            <TextInput
-                value={startTime}
-                onChangeText={setStartTime}
-                placeholder="14:00"
-                keyboardType="number-pad"
-                style={{
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    borderRadius: 4,
-                    padding: 10,
-                    marginBottom: 16,
-                }}
-            />
+                <View style={styles.section}>
+                    <Text style={styles.label}>날짜</Text>
+                    <TextInput
+                        value={date}
+                        onChangeText={setDate}
+                        placeholder="YYYY-MM-DD"
+                        keyboardType="number-pad"
+                        style={styles.input}
+                        placeholderTextColor="#999"
+                    />
+                </View>
 
-            <Text style={{ fontSize: 16, marginBottom: 8 }}>종료 시간 (HH:mm)</Text>
-            <TextInput
-                value={endTime}
-                onChangeText={setEndTime}
-                placeholder="15:00"
-                keyboardType="number-pad"
-                style={{
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    borderRadius: 4,
-                    padding: 10,
-                    marginBottom: 16,
-                }}
-            />
+                <View style={styles.timeRow}>
+                    <View style={styles.timeSection}>
+                        <Text style={styles.label}>시작 시간</Text>
+                        <TextInput
+                            value={startTime}
+                            onChangeText={setStartTime}
+                            placeholder="HH:mm"
+                            keyboardType="number-pad"
+                            style={styles.input}
+                            placeholderTextColor="#999"
+                        />
+                    </View>
+                    <View style={styles.timeSection}>
+                        <Text style={styles.label}>종료 시간</Text>
+                        <TextInput
+                            value={endTime}
+                            onChangeText={setEndTime}
+                            placeholder="HH:mm"
+                            keyboardType="number-pad"
+                            style={styles.input}
+                            placeholderTextColor="#999"
+                        />
+                    </View>
+                </View>
 
-            <Text style={{ fontSize: 16, marginBottom: 8 }}>장소</Text>
-            <TextInput
-                value={location}
-                onChangeText={setLocation}
-                placeholder="장소를 입력하세요"
-                style={{
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    borderRadius: 4,
-                    padding: 10,
-                    marginBottom: 24,
-                }}
-            />
+                <View style={styles.section}>
+                    <Text style={styles.label}>장소</Text>
+                    <TextInput
+                        value={location}
+                        onChangeText={setLocation}
+                        placeholder="장소를 입력하세요"
+                        style={styles.input}
+                        placeholderTextColor="#999"
+                    />
+                </View>
 
-            <TouchableOpacity
-                onPress={handleSubmit}
-                style={{
-                    backgroundColor: '#007bff',
-                    paddingVertical: 12,
-                    borderRadius: 6,
-                    alignItems: 'center',
-                }}
-            >
-                <Text style={{ color: '#fff', fontSize: 16 }}>저장하기</Text>
+                <TouchableOpacity
+                    onPress={handleSubmit}
+                    style={styles.submitButton}
+                >
+                <Text style={styles.submitButtonText}>저장하기</Text>
             </TouchableOpacity>
-        </ScrollView>
+                </ScrollView>
+            </TouchableWithoutFeedback>
+        </View>
     )
 }
+
+const styles = StyleSheet.create({
+    // 메인 컨테이너
+    container: {
+        flex: 1,
+        backgroundColor: '#FFFBF0',
+    },
+    content: {
+        flex: 1,
+    },
+    section: {
+        marginHorizontal: 20,
+        marginBottom: 25,
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#F57C00',
+        marginBottom: 10,
+    },
+    input: {
+        borderWidth: 2,
+        borderColor: '#FFE082',
+        borderRadius: 12,
+        padding: 15,
+        backgroundColor: '#fff',
+        fontSize: 16,
+        shadowColor: '#FFC107',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    textArea: {
+        height: 100,
+    },
+    timeRow: {
+        flexDirection: 'row',
+        marginHorizontal: 20,
+        marginBottom: 25,
+        gap: 15,
+    },
+    timeSection: {
+        flex: 1,
+    },
+    submitButton: {
+        backgroundColor: '#FFC107',
+        paddingVertical: 15,
+        borderRadius: 12,
+        alignItems: 'center',
+        marginHorizontal: 20,
+        marginBottom: 30,
+        shadowColor: '#FF8F00',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 5,
+    },
+    submitButtonText: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#fff',
+    },
+})
 
 export default EventFormScreen

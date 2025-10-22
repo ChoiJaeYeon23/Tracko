@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import {
     View,
     Text,
@@ -27,8 +27,13 @@ const TodoScreen = (
     useFocusEffect(
         useCallback(() => {
             fetchTodos()
-        }, [])
+        }, [selectedDate])
     )
+
+    // selectedDate가 변경될 때마다 데이터 새로고침
+    useEffect(() => {
+        fetchTodos()
+    }, [selectedDate])
 
     const toggleComplete = (id: string) => {
         const updated = todos.map(todo => {

@@ -4,7 +4,10 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Alert
+    Alert,
+    StyleSheet,
+    TouchableWithoutFeedback,
+    Keyboard
 } from 'react-native'
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
 import uuid from 'react-native-uuid'
@@ -13,6 +16,7 @@ import {
     addTodo,
     updateTodo
 } from '../../../database'
+import { Header } from '../../../components'
 
 type TodoFormScreenParams = {
     mode: 'create' | 'edit'
@@ -72,60 +76,113 @@ const TodoFormScreen = () => {
     }
 
     return (
-        <View style={{ padding: 20 }}>
-            <Text style={{ fontSize: 16, marginBottom: 8 }}>제목</Text>
-            <TextInput
-                value={title}
-                onChangeText={setTitle}
-                placeholder="제목을 입력하세요"
-                style={{
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    borderRadius: 4,
-                    padding: 10,
-                    marginBottom: 16,
-                }}
+        <View style={styles.container}>
+            <Header 
+                title={`투두 ${mode === 'edit' ? '수정' : '추가'}`}
+                showBackButton={true}
             />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={styles.content}>
 
-            <Text style={{ fontSize: 16, marginBottom: 8 }}>설명</Text>
-            <TextInput
-                value={description}
-                onChangeText={setDescription}
-                placeholder="설명을 입력하세요"
-                multiline
-                style={{
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    borderRadius: 4,
-                    padding: 10,
-                    marginBottom: 16,
-                    height: 80,
-                    textAlignVertical: 'top',
-                }}
-            />
+                <View style={styles.section}>
+                    <Text style={styles.label}>투두 제목</Text>
+                    <TextInput
+                        value={title}
+                        onChangeText={setTitle}
+                        placeholder="제목 입력"
+                        style={styles.input}
+                        placeholderTextColor="#999"
+                    />
+                </View>
 
-            <Text style={{ fontSize: 16, marginBottom: 8 }}>마감일 (예: 2025-05-22)</Text>
-            <TextInput
-                value={date}
-                onChangeText={setDate}
-                placeholder="YYYY-MM-DD"
-                keyboardType='number-pad'
-                style={{
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    borderRadius: 4,
-                    padding: 10,
-                    marginBottom: 16,
-                }}
-            />
+                <View style={styles.section}>
+                    <Text style={styles.label}>설명</Text>
+                    <TextInput
+                        value={description}
+                        onChangeText={setDescription}
+                        placeholder="설명을 입력하세요"
+                        multiline
+                        style={[styles.input, styles.textArea]}
+                        placeholderTextColor="#999"
+                        textAlignVertical="top"
+                    />
+                </View>
+
+                <View style={styles.section}>
+                    <Text style={styles.label}>마감일</Text>
+                    <TextInput
+                        value={date}
+                        onChangeText={setDate}
+                        placeholder="YYYY-MM-DD"
+                        keyboardType="number-pad"
+                        style={styles.input}
+                        placeholderTextColor="#999"
+                    />
+                </View>
 
             <TouchableOpacity
                 onPress={handleSubmit}
+                style={styles.submitButton}
             >
-                <Text>저장하기</Text>
+                <Text style={styles.submitButtonText}>저장하기</Text>
             </TouchableOpacity>
+                </View>
+            </TouchableWithoutFeedback>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    // 메인 컨테이너
+    container: {
+        flex: 1,
+        backgroundColor: '#FFFBF0',
+    },
+    content: {
+        flex: 1,
+        padding: 20,
+    },
+    section: {
+        marginBottom: 25,
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#F57C00',
+        marginBottom: 10,
+    },
+    input: {
+        borderWidth: 2,
+        borderColor: '#FFE082',
+        borderRadius: 12,
+        padding: 15,
+        backgroundColor: '#fff',
+        fontSize: 16,
+        shadowColor: '#FFC107',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    textArea: {
+        height: 100,
+    },
+    submitButton: {
+        backgroundColor: '#FFC107',
+        paddingVertical: 15,
+        borderRadius: 12,
+        alignItems: 'center',
+        shadowColor: '#FF8F00',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 5,
+    },
+    submitButtonText: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#fff',
+    },
+})
 
 export default TodoFormScreen

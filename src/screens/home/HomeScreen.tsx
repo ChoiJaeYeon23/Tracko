@@ -8,6 +8,7 @@ import {
     eventStorage, routineStorage, todoStorage,
     getAllEvents, getAllRoutines, getAllTodos, getRoutineCompletionMap
 } from '../../database'
+import { Header } from '../../components'
 
 // 저장소 초기화 및 출력용 임시 버튼이 추가돼있습니다. 
 const HomeScreen = () => {
@@ -43,35 +44,41 @@ const HomeScreen = () => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
-            <View style={{ flex: 1, alignItems: 'center' }}>
-                <Text>HomeScreen Hi ~</Text>
-            </View>
+        <View style={{ flex: 1, backgroundColor: '#FFFBF0' }}>
+            <Header 
+                title="홈"
+                showBackButton={false}
+            />
+            <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
+                <View style={{ flex: 1, alignItems: 'center' }}>
+                    <Text>HomeScreen Hi ~</Text>
+                </View>
 
-            <View style={{ flex: 1, alignItems: 'center' }}>
-                <Text>Schedule 관련 버튼입니다</Text>
-                <Button
-                    title='전체출력'
-                    onPress={printAllStorageData}
-                />
-                <Button
-                    title='전체삭제'
-                    onPress={deleteAllStorage}
-                />
-                <Button
-                    title='루틴삭제'
-                    onPress={deleteRoutineStorage}
-                />
-                <Button
-                    title='투두삭제'
-                    onPress={deleteTodoStorage}
-                />
-                <Button
-                    title='일정삭제'
-                    onPress={deleteEventStorage}
-                />
-            </View>
-        </SafeAreaView>
+                <View style={{ flex: 1, alignItems: 'center' }}>
+                    <Text>Schedule 관련 버튼입니다</Text>
+                    <Button
+                        title='전체출력'
+                        onPress={printAllStorageData}
+                    />
+                    <Button
+                        title='전체삭제'
+                        onPress={deleteAllStorage}
+                    />
+                    <Button
+                        title='루틴삭제'
+                        onPress={deleteRoutineStorage}
+                    />
+                    <Button
+                        title='투두삭제'
+                        onPress={deleteTodoStorage}
+                    />
+                    <Button
+                        title='일정삭제'
+                        onPress={deleteEventStorage}
+                    />
+                </View>
+            </SafeAreaView>
+        </View>
     )
 }
 

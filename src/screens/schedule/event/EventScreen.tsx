@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from 'react'
+import { useMemo, useState, useCallback, useEffect } from 'react'
 import {
     View,
     Text,
@@ -61,6 +61,11 @@ const EventScreen = (
             fetchEvents()
         }, [selectedDate])
     )
+
+    // selectedDate가 변경될 때마다 데이터 새로고침
+    useEffect(() => {
+        fetchEvents()
+    }, [selectedDate])
 
     const handleDeleteEvent = (event: Event) => {
         Alert.alert(

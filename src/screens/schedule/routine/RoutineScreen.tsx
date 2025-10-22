@@ -48,6 +48,11 @@ const RoutineScreen = (
         }, [selectedDate])
     )
 
+    // selectedDate가 변경될 때마다 데이터 새로고침
+    useEffect(() => {
+        fetchRoutines()
+    }, [selectedDate])
+
     const selectedRoutines = routines.filter(routine =>
         routine.daysOfWeek.includes(selectedDay)
     )

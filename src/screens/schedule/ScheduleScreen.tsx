@@ -15,6 +15,7 @@ import {
     EventScreen
 } from '../../screens'
 import { ScheduleStackParamList } from '../../navigation/ScheduleStackNavigator'
+import { Header } from '../../components'
 
 const initialLayout = { width: Dimensions.get('window').width }
 
@@ -72,29 +73,35 @@ const ScheduleScreen = ({ navigation }: Props) => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <View style={{ flex: 0.7 }}>
-                <CalendarScreen
-                    selectedDate={selectedDate}
-                    onDateChange={setSelectedDate}
-                />
-            </View>
-            <View style={{ flex: 0.3 }}>
-                <TabView
-                    key={selectedDate}
-                    navigationState={{ index, routes }}
-                    renderScene={renderScene}
-                    onIndexChange={setIndex}
-                    initialLayout={initialLayout}
-                    renderTabBar={renderTabBar}
-                />
-                <FAB
-                    style={{ position: 'absolute', right: 16, bottom: 16 }}
-                    icon='plus'
-                    onPress={handleFabPress}
-                />
-            </View>
-        </SafeAreaView>
+        <View style={{ flex: 1, backgroundColor: '#FFFBF0' }}>
+            <Header 
+                title="일정"
+                showBackButton={false}
+            />
+            <SafeAreaView style={{ flex: 1 }}>
+                <View style={{ flex: 0.7 }}>
+                    <CalendarScreen
+                        selectedDate={selectedDate}
+                        onDateChange={setSelectedDate}
+                    />
+                </View>
+                <View style={{ flex: 0.3 }}>
+                    <TabView
+                        key={selectedDate}
+                        navigationState={{ index, routes }}
+                        renderScene={renderScene}
+                        onIndexChange={setIndex}
+                        initialLayout={initialLayout}
+                        renderTabBar={renderTabBar}
+                    />
+                    <FAB
+                        style={{ position: 'absolute', right: 16, bottom: 16 }}
+                        icon='plus'
+                        onPress={handleFabPress}
+                    />
+                </View>
+            </SafeAreaView>
+        </View>
     )
 }
 
