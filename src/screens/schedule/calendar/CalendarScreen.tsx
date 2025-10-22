@@ -5,6 +5,7 @@ import {
 } from 'react-native'
 import dayjs from 'dayjs'
 import { useState, useEffect } from 'react'
+import { getAllRoutines, getAllTodos, getAllEvents } from '../../../database'
 
 const CalendarScreen = (
     { selectedDate, onDateChange }: {
@@ -19,11 +20,54 @@ const CalendarScreen = (
         setCurrentDate(dayjs(selectedDate))
     }, [selectedDate])
 
-    // 현재 월에 맞는 가라데이터 동적 생성
-    const currentMonth = currentDate.format('YYYY-MM')
-    const routineDays = [1, 3, 5] // 월요일, 수요일, 금요일
-    const todos = [`${currentMonth}-03`, `${currentMonth}-15`, `${currentMonth}-21`]
-    const events = [`${currentMonth}-01`, `${currentMonth}-20`, `${currentMonth}-25`]
+    // 실제 데이터베이스에서 데이터 가져오기
+    const [routines, setRoutines] = useState<any[]>([])
+    const [todos, setTodos] = useState<any[]>([])
+    const [events, setEvents] = useState<any[]>([])
+
+    useEffect(() => {
+        console.log('=== 캘린더 useEffect 실행 ===')
+        console.log('currentDate:', currentDate.format('YYYY-MM-DD'))
+        
+        try {
+            const routinesData = getAllRoutines()
+            const todosData = getAllTodos()
+            const eventsData = getAllEvents()
+            
+            console.log('=== 캘린더 데이터 로딩 ===')
+            console.log('루틴 개수:', routinesData.length)
+            console.log('투두 개수:', todosData.length)
+            console.log('일정 개수:', eventsData.length)
+            
+            if (routinesData.length > 0) {
+                console.log('루틴 상세:', routinesData.map(r => ({ 
+                    title: r.title, 
+                    daysOfWeek: r.daysOfWeek,
+                    time: r.time 
+                })))
+            }
+            
+            if (todosData.length > 0) {
+                console.log('투두 상세:', todosData.map(t => ({ 
+                    title: t.title, 
+                    date: t.date
+                })))
+            }
+            
+            if (eventsData.length > 0) {
+                console.log('일정 상세:', eventsData.map(e => ({ 
+                    title: e.title, 
+                    date: e.date
+                })))
+            }
+            
+            setRoutines(routinesData)
+            setTodos(todosData)
+            setEvents(eventsData)
+        } catch (error) {
+            console.error('캘린더 데이터 로딩 실패:', error)
+        }
+    }, [currentDate])
 
     const startOfMonth = currentDate.startOf('month')
     const endOfMonth = currentDate.endOf('month')
@@ -61,9 +105,28 @@ for (let i = 1; i <= daysInMonth; i++) {
     const renderDot = (date: dayjs.Dayjs) => {
         const formatted = date.format('YYYY-MM-DD')
         const dots = []
+        const dayOfWeek = date.day()
 
-        // 요일 기반 루틴 (0=일 ~ 6=토)
-        if (routineDays.includes(date.day())) {
+        // 실제 루틴 데이터에서 해당 요일에 루틴이 있는지 확인
+        const hasRoutine = routines.some(routine => {
+            const hasDay = routine.daysOfWeek.includes(dayOfWeek)
+            if (hasDay) {
+                console.log(`[Calendar] 루틴 발견: ${routine.title}, 요일: ${dayOfWeek}, 설정된 요일들: ${routine.daysOfWeek}`)
+            }
+            return hasDay
+        })
+
+        // 실제 투두 데이터에서 해당 날짜에 투두가 있는지 확인
+        const hasTodo = todos.some(todo => todo.date === formatted)
+
+        // 실제 일정 데이터에서 해당 날짜에 일정이 있는지 확인
+        const hasEvent = events.some(event => event.date === formatted)
+
+        if (hasRoutine || hasTodo || hasEvent) {
+            console.log(`[Calendar] ${formatted} (요일: ${dayOfWeek}) - 루틴: ${hasRoutine}, 투두: ${hasTodo}, 일정: ${hasEvent}`)
+        }
+
+        if (hasRoutine) {
             dots.push(
                 <View
                     key="routine"
@@ -78,7 +141,7 @@ for (let i = 1; i <= daysInMonth; i++) {
             )
         }
 
-        if (todos.includes(formatted)) {
+        if (hasTodo) {
             dots.push(
                 <View
                     key="todo"
@@ -93,7 +156,7 @@ for (let i = 1; i <= daysInMonth; i++) {
             )
         }
 
-        if (events.includes(formatted)) {
+        if (hasEvent) {
             dots.push(
                 <View
                     key="event"
