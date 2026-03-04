@@ -73,7 +73,7 @@ const ScheduleScreen = ({ navigation }: Props) => {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFFBF0' }}>
+        <View style={{ flex: 1, backgroundColor: '#FFF8E1' }}>
             <Header 
                 title="일정"
                 showBackButton={false}
@@ -85,7 +85,7 @@ const ScheduleScreen = ({ navigation }: Props) => {
                         onDateChange={setSelectedDate}
                     />
                 </View>
-                <View style={{ flex: 0.3 }}>
+                <View style={{ flex: 0.4 }}>
                     <TabView
                         key={selectedDate}
                         navigationState={{ index, routes }}

@@ -203,6 +203,8 @@ const RoutineFormScreen = () => {
                                 style={styles.timePicker}
                                 minimumDate={dayjs().hour(0).minute(0).second(0).millisecond(0).toDate()}
                                 maximumDate={dayjs().hour(23).minute(59).second(59).millisecond(999).toDate()}
+                                locale="ko-KR"
+                                textColor="#000000"
                             />
                         </View>
                         
@@ -239,7 +241,7 @@ const styles = StyleSheet.create({
     // 메인 컨테이너
     container: {
         flex: 1,
-        backgroundColor: '#FFFBF0',
+        backgroundColor: '#FFF8E1',
     },
     content: {
         flex: 1,
