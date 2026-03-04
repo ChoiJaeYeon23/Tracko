@@ -188,41 +188,42 @@ for (let i = 1; i <= daysInMonth; i++) {
     }
 
     return (
-        <View style={{ padding: 20 }}>
+        <View style={{ flex: 1, padding: 16 }}>
             {/* 월 이동 헤더 */}
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                <TouchableOpacity onPress={() => handleMonthChange('prev')}>
+                <TouchableOpacity 
+                    onPress={() => handleMonthChange('prev')}
+                    style={{ padding: 12, minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }}
+                >
                     <Text style={{ fontSize: 18 }}>{'<'}</Text>
                 </TouchableOpacity>
                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{currentDate.format('YYYY년 MM월')}</Text>
-                <TouchableOpacity onPress={() => handleMonthChange('next')}>
+                <TouchableOpacity 
+                    onPress={() => handleMonthChange('next')}
+                    style={{ padding: 12, minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }}
+                >
                     <Text style={{ fontSize: 18 }}>{'>'}</Text>
                 </TouchableOpacity>
             </View>
 
             {/* 요일 헤더 */}
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
+            <View style={{ flexDirection: 'row', marginBottom: 8 }}>
                 {['일', '월', '화', '수', '목', '금', '토'].map((d) => (
-                    <Text
-                        key={d}
-                        style={{
-                            width: `${100 / 7}%`,
-                            textAlign: 'center',
-                            fontWeight: '600',
-                            color: '#444',
-                        }}>
-                        {d}
-                    </Text>
+                    <View key={d} style={{ flex: 1, alignItems: 'center' }}>
+                        <Text style={{ fontSize: 14, fontWeight: '600', color: '#444' }}>
+                            {d}
+                        </Text>
+                    </View>
                 ))}
             </View>
 
             {/* 날짜 셀 */}
-            <View style={{ marginBottom: 40 }}>
+            <View style={{ flex: 1, maxHeight: 300 }}>
                 {Array.from({ length: Math.ceil(dates.length / 7) }, (_, weekIndex) => (
-                    <View key={weekIndex} style={{ flexDirection: 'row', marginBottom: 12 }}>
+                    <View key={weekIndex} style={{ flexDirection: 'row' }}>
                         {dates.slice(weekIndex * 7, (weekIndex + 1) * 7).map((date, dayIndex) => {
                             if (!date) {
-                                return <View key={dayIndex} style={{ flex: 1, height: 60 }} />
+                                return <View key={dayIndex} style={{ flex: 1 }} />
                             }
 
                             const formatted = date.format('YYYY-MM-DD')
@@ -234,9 +235,9 @@ for (let i = 1; i <= daysInMonth; i++) {
                                     onPress={() => onDateChange(formatted)}
                                     style={{
                                         flex: 1,
-                                        height: 60,
                                         alignItems: 'center',
                                         justifyContent: 'center',
+                                        paddingVertical: 4,
                                     }}
                                 >
                                     <View style={{

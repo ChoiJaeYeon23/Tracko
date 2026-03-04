@@ -57,7 +57,7 @@ const Header: React.FC<HeaderProps> = ({
 
 const styles = StyleSheet.create({
     safeArea: {
-        backgroundColor: '#FFE082',
+        backgroundColor: '#FFF8E1',
     },
     container: {
         flexDirection: 'row',
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 16,
         paddingVertical: 12,
-        backgroundColor: '#FFE082',
+        backgroundColor: '#FFF8E1',
         shadowColor: '#FFC107',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         width: 32,
         height: 32,
         borderRadius: 16,
-        backgroundColor: '#fff',
+        backgroundColor: '#FFE082',
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: '#FF8F00',
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: '700',
-        color: '#E65100',
+        color: '#2E2E2E',
         textAlign: 'center',
     },
 })

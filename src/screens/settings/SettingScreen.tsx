@@ -21,7 +21,7 @@ const SettingScreen = () => {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFFBF0' }}>
+        <View style={{ flex: 1, backgroundColor: '#FFF8E1' }}>
             <Header 
                 title="설정"
                 showBackButton={false}

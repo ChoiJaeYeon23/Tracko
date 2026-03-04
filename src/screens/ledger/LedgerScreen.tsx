@@ -31,7 +31,7 @@ export default LedgerScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFBF0',
+    backgroundColor: '#FFF8E1',
   },
   content: {
     flex: 1,
