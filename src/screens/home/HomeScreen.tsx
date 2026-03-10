@@ -44,7 +44,7 @@ const HomeScreen = () => {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFF8E1' }}>
+        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
             <Header 
                 title="홈"
                 showBackButton={false}

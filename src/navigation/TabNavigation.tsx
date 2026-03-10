@@ -17,19 +17,21 @@ const TabNavigation = () => {
                 headerShown: false,
                 tabBarActiveTintColor: '#FF8F00',
                 tabBarInactiveTintColor: '#FFB74D',
+
                 tabBarStyle: {
                     backgroundColor: '#FFF8E1',
                     borderTopWidth: 1,
                     borderTopColor: '#FFE082',
-                    paddingBottom: 5,
-                    paddingTop: 5,
                     height: 60,
-                    shadowColor: '#FFC107',
-                    shadowOffset: { width: 0, height: -2 },
-                    shadowOpacity: 0.2,
-                    shadowRadius: 4,
-                    elevation: 5,
-                }
+                },
+                tabBarItemStyle: {
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                },
+                tabBarLabelStyle: {
+                    fontSize: 10,
+                    fontWeight: '600',
+                },
             }}
         >
             <BottomTab.Screen
