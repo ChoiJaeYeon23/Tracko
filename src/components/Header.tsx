@@ -1,12 +1,8 @@
 import React from 'react'
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    StyleSheet,
-    SafeAreaView
-} from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+
+const HEADER_BAR_HEIGHT = 48
 
 interface HeaderProps {
     title: string
@@ -30,8 +26,8 @@ const Header: React.FC<HeaderProps> = ({
     }
 
     return (
-        <SafeAreaView style={styles.safeArea}>
-            <View style={styles.container}>
+        <View style={styles.wrapper}>
+            <View style={[styles.container, { height: HEADER_BAR_HEIGHT }]}>
                 <View style={styles.leftSection}>
                     {showBackButton && (
                         <TouchableOpacity
@@ -51,12 +47,12 @@ const Header: React.FC<HeaderProps> = ({
                     {/* 오른쪽에 추가 버튼이 필요한 경우 여기에 추가 */}
                 </View>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
-    safeArea: {
+    wrapper: {
         backgroundColor: '#FFF8E1',
     },
     container: {
@@ -64,13 +60,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 16,
-        paddingVertical: 12,
         backgroundColor: '#FFF8E1',
-        shadowColor: '#FFC107',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        elevation: 3,
     },
     leftSection: {
         width: 40,
@@ -85,22 +75,13 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
     },
     backButton: {
-        width: 32,
-        height: 32,
-        borderRadius: 16,
-        backgroundColor: '#FFE082',
-        justifyContent: 'center',
-        alignItems: 'center',
-        shadowColor: '#FF8F00',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-        elevation: 2,
+        padding: 8,
+        marginLeft: -8,
     },
     backButtonText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#F57C00',
+        fontSize: 24,
+        fontWeight: '400',
+        color: '#374151',
     },
     title: {
         fontSize: 18,
