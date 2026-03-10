@@ -3,7 +3,7 @@ import { Header } from '../../components'
 
 const AnalysisScreen = () => {
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFF8E1' }}>
+        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
             <Header 
                 title="분석"
                 showBackButton={false}

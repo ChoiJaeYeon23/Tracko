@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     // 메인 컨테이너
     container: {
         flex: 1,
-        backgroundColor: '#FFF8E1',
+        backgroundColor: '#FFFFFF',
     },
     content: {
         flex: 1,
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
         padding: 20,
         borderBottomWidth: 1,
         borderBottomColor: '#f0f0f0',
-        backgroundColor: '#FFF8E1',
+        backgroundColor: '#FFFFFF',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
     },

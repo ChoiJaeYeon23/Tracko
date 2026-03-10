@@ -73,7 +73,7 @@ const ScheduleScreen = ({ navigation }: Props) => {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFF8E1' }}>
+        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
             <Header 
                 title="일정"
                 showBackButton={false}
