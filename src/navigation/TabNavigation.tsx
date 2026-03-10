@@ -40,7 +40,7 @@ const TabNavigation = () => {
                 options={{
                     tabBarLabel: '가계부',
                     tabBarIcon: ({ color, size }) => (
-                        <Icon name="account-balance-wallet" size={size} color={color} />
+                        <Icon name="account-balance-wallet" size={size ?? 24} color={color ?? '#FFB74D'} />
                     ),
                 }}
             />
@@ -50,7 +50,7 @@ const TabNavigation = () => {
                 options={{
                     tabBarLabel: '일정',
                     tabBarIcon: ({ color, size }) => (
-                        <Icon name="calendar-today" size={size} color={color} />
+                        <Icon name="calendar-today" size={size ?? 24} color={color ?? '#FFB74D'} />
                     ),
                 }}
             />
@@ -60,7 +60,7 @@ const TabNavigation = () => {
                 options={{
                     tabBarLabel: '홈',
                     tabBarIcon: ({ color, size }) => (
-                        <Icon name="home" size={size} color={color} />
+                        <Icon name="home" size={size ?? 24} color={color ?? '#FFB74D'} />
                     ),
                 }}
             />
@@ -70,7 +70,7 @@ const TabNavigation = () => {
                 options={{
                     tabBarLabel: '분석',
                     tabBarIcon: ({ color, size }) => (
-                        <Icon name="analytics" size={size} color={color} />
+                        <Icon name="analytics" size={size ?? 24} color={color ?? '#FFB74D'} />
                     ),
                 }}
             />
@@ -80,7 +80,7 @@ const TabNavigation = () => {
                 options={{
                     tabBarLabel: '설정',
                     tabBarIcon: ({ color, size }) => (
-                        <Icon name="settings" size={size} color={color} />
+                        <Icon name="settings" size={size ?? 24} color={color ?? '#FFB74D'} />
                     ),
                 }}
             />
