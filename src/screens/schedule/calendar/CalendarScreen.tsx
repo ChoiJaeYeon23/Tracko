@@ -4,7 +4,7 @@ import {
     TouchableOpacity,
 } from 'react-native'
 import dayjs from 'dayjs'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { getAllRoutines, getAllTodos, getAllEvents } from '../../../database'
 
 const CalendarScreen = (
@@ -26,44 +26,10 @@ const CalendarScreen = (
     const [events, setEvents] = useState<any[]>([])
 
     useEffect(() => {
-        console.log('=== 캘린더 useEffect 실행 ===')
-        console.log('currentDate:', currentDate.format('YYYY-MM-DD'))
-        
         try {
-            const routinesData = getAllRoutines()
-            const todosData = getAllTodos()
-            const eventsData = getAllEvents()
-            
-            console.log('=== 캘린더 데이터 로딩 ===')
-            console.log('루틴 개수:', routinesData.length)
-            console.log('투두 개수:', todosData.length)
-            console.log('일정 개수:', eventsData.length)
-            
-            if (routinesData.length > 0) {
-                console.log('루틴 상세:', routinesData.map(r => ({ 
-                    title: r.title, 
-                    daysOfWeek: r.daysOfWeek,
-                    time: r.time 
-                })))
-            }
-            
-            if (todosData.length > 0) {
-                console.log('투두 상세:', todosData.map(t => ({ 
-                    title: t.title, 
-                    date: t.date
-                })))
-            }
-            
-            if (eventsData.length > 0) {
-                console.log('일정 상세:', eventsData.map(e => ({ 
-                    title: e.title, 
-                    date: e.date
-                })))
-            }
-            
-            setRoutines(routinesData)
-            setTodos(todosData)
-            setEvents(eventsData)
+            setRoutines(getAllRoutines())
+            setTodos(getAllTodos())
+            setEvents(getAllEvents())
         } catch (error) {
             console.error('캘린더 데이터 로딩 실패:', error)
         }
@@ -95,37 +61,20 @@ for (let i = 1; i <= daysInMonth; i++) {
         }
     }
 
-    // 디버깅용 로그
-    console.log('startDay:', startDay)
-    console.log('daysInMonth:', daysInMonth)
-    console.log('dates length:', dates.length)
-    console.log('remainingCells:', remainingCells)
-    console.log('dates array:', dates.map(d => d ? d.format('DD') : 'null'))
+    const todoDateSet = useMemo(() => new Set(todos.map(t => t.date)), [todos])
+    const eventDateSet = useMemo(() => new Set(events.map(e => e.date)), [events])
+
+    const hasRoutineOnDay = useCallback((dayOfWeek: number) => 
+        routines.some(r => r.daysOfWeek.includes(dayOfWeek)), [routines])
 
     const renderDot = (date: dayjs.Dayjs) => {
         const formatted = date.format('YYYY-MM-DD')
-        const dots = []
         const dayOfWeek = date.day()
+        const hasRoutine = hasRoutineOnDay(dayOfWeek)
+        const hasTodo = todoDateSet.has(formatted)
+        const hasEvent = eventDateSet.has(formatted)
 
-        // 실제 루틴 데이터에서 해당 요일에 루틴이 있는지 확인
-        const hasRoutine = routines.some(routine => {
-            const hasDay = routine.daysOfWeek.includes(dayOfWeek)
-            if (hasDay) {
-                console.log(`[Calendar] 루틴 발견: ${routine.title}, 요일: ${dayOfWeek}, 설정된 요일들: ${routine.daysOfWeek}`)
-            }
-            return hasDay
-        })
-
-        // 실제 투두 데이터에서 해당 날짜에 투두가 있는지 확인
-        const hasTodo = todos.some(todo => todo.date === formatted)
-
-        // 실제 일정 데이터에서 해당 날짜에 일정이 있는지 확인
-        const hasEvent = events.some(event => event.date === formatted)
-
-        if (hasRoutine || hasTodo || hasEvent) {
-            console.log(`[Calendar] ${formatted} (요일: ${dayOfWeek}) - 루틴: ${hasRoutine}, 투두: ${hasTodo}, 일정: ${hasEvent}`)
-        }
-
+        const dots = []
         if (hasRoutine) {
             dots.push(
                 <View

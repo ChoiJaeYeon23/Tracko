@@ -32,10 +32,6 @@ const RoutineScreen = (
             setRoutines(routinesStorage)
             setCompletionMap(completionStorage)
 
-            console.log('[RoutineScreen][Success] 루틴 불러오기 성공')
-            console.log('[RoutineScreen] selectedDate:', selectedDate)
-            console.log('[RoutineScreen] selectedDay:', selectedDay)
-            console.log('[RoutineScreen] routinesStorage:', routinesStorage)
         } catch (error) {
             console.error('[RoutineScreen][Failed] 루틴 불러오기 실패')
             Alert.alert('루틴을 불러오지 못했습니다')
@@ -57,9 +53,6 @@ const RoutineScreen = (
         routine.daysOfWeek.includes(selectedDay)
     )
 
-    console.log('[RoutineScreen] selectedRoutines:', selectedRoutines)
-    console.log('[RoutineScreen] routines.length:', routines.length)
-    console.log('[RoutineScreen] selectedRoutines.length:', selectedRoutines.length)
 
     const isRoutineCompleted = (id: string): boolean => {
         return completionMap[dateKey]?.includes(id) ?? false

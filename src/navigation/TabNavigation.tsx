@@ -15,13 +15,10 @@ const TabNavigation = () => {
         <BottomTab.Navigator 
             screenOptions={{ 
                 headerShown: false,
-                tabBarActiveTintColor: '#FF8F00',
-                tabBarInactiveTintColor: '#FFB74D',
+                tabBarActiveTintColor: '#FFB643',
 
                 tabBarStyle: {
                     backgroundColor: '#FFF8E1',
-                    borderTopWidth: 1,
-                    borderTopColor: '#FFE082',
                     height: 60,
                 },
                 tabBarItemStyle: {

@@ -87,12 +87,12 @@ const ScheduleScreen = ({ navigation }: Props) => {
                 </View>
                 <View style={{ flex: 0.4 }}>
                     <TabView
-                        key={selectedDate}
                         navigationState={{ index, routes }}
                         renderScene={renderScene}
                         onIndexChange={setIndex}
                         initialLayout={initialLayout}
                         renderTabBar={renderTabBar}
+                        lazy
                     />
                     <FAB
                         style={{ position: 'absolute', right: 16, bottom: 16 }}

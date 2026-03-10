@@ -16,7 +16,6 @@ const getWeekRange = (date: dayjs.Dayjs) => {
     const day = date.day() // 0(일) ~ 6(토)
     const monday = date.subtract(day === 0 ? 6 : day - 1, 'day') // 일요일이면 -6일, 그 외는 (요일-1)일 뺌
     const sunday = monday.add(6, 'day')
-    console.log('[getWeekRange] monday:', monday.format('YYYY-MM-DD'), ', sunday:', sunday.format('YYYY-MM-DD'))
     return { monday, sunday }
 }
 
@@ -30,7 +29,6 @@ const EventScreen = (
     const [weekEvents, setWeekEvents] = useState<Event[]>([])
 
     const fetchEvents = useCallback(() => {
-        console.log('[fetchEvents] 시작')
         const allEvents = getAllEvents()
 
         const filteredSelectedDay = allEvents.filter(event => {
