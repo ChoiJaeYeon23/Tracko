@@ -11,12 +11,10 @@ import {
     Keyboard
 } from 'react-native'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
-import DateTimePicker from '@react-native-community/datetimepicker'
-import dayjs from 'dayjs'
 import uuid from 'react-native-uuid'
 import { addRoutine, updateRoutine } from '../../../database'
 import { Routine } from '../../../types'
-import { Header } from '../../../components'
+import { Header, TimePicker } from '../../../components'
 
 const daysKor = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -34,15 +32,7 @@ const RoutineFormScreen = () => {
     const [daysOfWeek, setDaysOfWeek] = useState<number[]>(routine?.daysOfWeek || [])
     const [time, setTime] = useState<string | undefined>(routine?.time)
     const [showTimePicker, setShowTimePicker] = useState(false)
-    const [tempTime, setTempTime] = useState<Date | null>(null)
-
-    // 시간 선택기 초기값 설정
-    const getInitialTime = () => {
-        if (tempTime) return tempTime
-        if (time) return dayjs(time, 'HH:mm').toDate()
-        // 기본값을 오전 9시로 설정
-        return dayjs().hour(9).minute(0).second(0).millisecond(0).toDate()
-    }
+    const [tempTime, setTempTime] = useState<string | null>(null)
 
     const toggleDay = (day: number) => {
         setDaysOfWeek(prev =>
@@ -52,16 +42,8 @@ const RoutineFormScreen = () => {
         )
     }
 
-    const handleTimeChange = (_event: any, selected?: Date) => {
-        if (selected) {
-            setTempTime(selected)
-        }
-    }
-
     const confirmTimeSelection = () => {
-        if (tempTime) {
-            setTime(dayjs(tempTime).format('HH:mm'))
-        }
+        if (tempTime) setTime(tempTime)
         setShowTimePicker(false)
         setTempTime(null)
     }
@@ -158,14 +140,7 @@ const RoutineFormScreen = () => {
                 <Text style={styles.label}>시간 선택 (선택)</Text>
                 <TouchableOpacity
                     onPress={() => {
-                        // 시간 선택기 열 때 적절한 초기값 설정
-                        if (!tempTime) {
-                            if (time) {
-                                setTempTime(dayjs(time, 'HH:mm').toDate())
-                            } else {
-                                setTempTime(dayjs().hour(9).minute(0).second(0).millisecond(0).toDate())
-                            }
-                        }
+                        setTempTime(time || '09:00')
                         setShowTimePicker(true)
                     }}
                     style={styles.timeButton}
@@ -192,17 +167,9 @@ const RoutineFormScreen = () => {
                         </View>
                         
                         <View style={styles.timePickerContainer}>
-                            <DateTimePicker
-                                value={getInitialTime()}
-                                mode="time"
-                                is24Hour={true}
-                                display="spinner"
-                                onChange={handleTimeChange}
-                                style={styles.timePicker}
-                                minimumDate={dayjs().hour(0).minute(0).second(0).millisecond(0).toDate()}
-                                maximumDate={dayjs().hour(23).minute(59).second(59).millisecond(999).toDate()}
-                                locale="ko-KR"
-                                textColor="#000000"
+                            <TimePicker
+                                value={tempTime || time || '09:00'}
+                                onTimeChange={setTempTime}
                             />
                         </View>
                         
@@ -359,10 +326,6 @@ const styles = StyleSheet.create({
     timePickerContainer: {
         padding: 20,
         alignItems: 'center',
-    },
-    timePicker: {
-        width: 200,
-        height: 200,
     },
     modalButtons: {
         flexDirection: 'row',

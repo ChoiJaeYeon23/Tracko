@@ -1,62 +1,64 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import WheelPicker from '@quidone/react-native-wheel-picker'
 
 type TimePickerProps = {
-  onTimeChange?: (time: { hour: number; minute: number; ampm: 'AM' | 'PM' }) => void
+  value?: string
+  onTimeChange?: (time: string) => void
 }
 
-const TimePicker = ({ onTimeChange }: TimePickerProps) => {
-  const hours = [...Array(12)].map((_, i) => i + 1) // 1~12
-  const minutes = [0, 10, 20, 30, 40, 50]
-  const ampmOptions = ['AM', 'PM'] as const
+const HOURS = [...Array(24)].map((_, i) => ({ label: i.toString().padStart(2, '0'), value: i }))
+const MINUTES = [...Array(12)].map((_, i) => i * 5).map((m) => ({ label: m.toString().padStart(2, '0'), value: m }))
 
-  const [hour, setHour] = useState(12)
-  const [minute, setMinute] = useState(0)
-  const [ampm, setAmPm] = useState<typeof ampmOptions[number]>('AM')
+const parseTime = (timeStr: string): { hour: number; minute: number } => {
+  const [h, m] = timeStr.split(':').map(Number)
+  return { hour: h ?? 9, minute: m ?? 0 }
+}
 
-  const onHourChanged = ({ item: { value } }: { item: { value: number } }) => {
-    setHour(value)
-    onTimeChange?.({ hour: value, minute, ampm })
+const formatTime = (hour: number, minute: number) =>
+  `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
+
+const TimePicker = ({ value, onTimeChange }: TimePickerProps) => {
+  const parsed = value ? parseTime(value) : { hour: 9, minute: 0 }
+
+  const [hour, setHour] = useState(parsed.hour)
+  const [minute, setMinute] = useState(Math.min(55, Math.floor(parsed.minute / 5) * 5))
+
+  useEffect(() => {
+    if (value) {
+      const { hour: h, minute: m } = parseTime(value)
+      setHour(h)
+      setMinute(Math.min(55, Math.floor(m / 5) * 5))
+    }
+  }, [value])
+
+  const onHourChanged = ({ item: { value: v } }: { item: { value: number } }) => {
+    setHour(v)
+    onTimeChange?.(formatTime(v, minute))
   }
 
-  const onMinuteChanged = ({ item: { value } }: { item: { value: number } }) => {
-    setMinute(value)
-    onTimeChange?.({ hour, minute: value, ampm })
-  }
-
-  const onAmPmChanged = ({ item: { value } }: { item: { value: typeof ampmOptions[number] } }) => {
-    setAmPm(value)
-    onTimeChange?.({ hour, minute, ampm: value })
+  const onMinuteChanged = ({ item: { value: v } }: { item: { value: number } }) => {
+    setMinute(v)
+    onTimeChange?.(formatTime(hour, v))
   }
 
   return (
     <View style={styles.container}>
-      {/* 시간 */}
       <WheelPicker
         style={styles.picker}
-        data={hours.map((h) => ({ label: h.toString(), value: h }))}
+        data={HOURS}
         value={hour}
         onValueChanged={onHourChanged}
       />
       <Text style={styles.separator}>시</Text>
 
-      {/* 분 */}
       <WheelPicker
         style={styles.picker}
-        data={minutes.map((m) => ({ label: m.toString().padStart(2, '0'), value: m }))}
+        data={MINUTES}
         value={minute}
         onValueChanged={onMinuteChanged}
       />
       <Text style={styles.separator}>분</Text>
-
-      {/* AM/PM */}
-      <WheelPicker
-        style={styles.picker}
-        data={ampmOptions.map((v) => ({ label: v, value: v }))}
-        value={ampm}
-        onValueChanged={onAmPmChanged}
-      />
     </View>
   )
 }
@@ -68,8 +70,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   picker: {
-    width: 60,
-    height: 150,
+    width: 64,
+    height: 160,
   },
   separator: {
     fontSize: 18,
