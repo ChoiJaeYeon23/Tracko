@@ -105,13 +105,6 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-    
-    // Vector Icons 폰트 복사
-    sourceSets {
-        main {
-            assets.srcDirs += ['../../node_modules/react-native-vector-icons/Fonts']
-        }
-    }
 }
 
 dependencies {
@@ -127,3 +120,6 @@ dependencies {
     // Vector Icons
     implementation project(':react-native-vector-icons')
 }
+
+// fonts/ 아래로 TTF 복사 (sourceSets로 Fonts 폴더만 넣으면 assets 루트에 깔려 글리프가 깨짐)
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
