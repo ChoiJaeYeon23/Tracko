@@ -1,32 +1,28 @@
+import React from 'react'
+import { StyleSheet } from 'react-native'
+import { FAB } from 'react-native-paper'
+import { INK, WHITE } from '../../constants/appColors'
 
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+type Props = {
+    onPress: () => void
+}
 
-const AddExpenseButton = () => {
-  return (
-    <TouchableOpacity style={styles.button}>
-      <Text style={styles.plus}>＋</Text>
-    </TouchableOpacity>
-  );
-};
+const AddExpenseButton = ({ onPress }: Props) => (
+    <FAB
+        icon="plus"
+        color={WHITE}
+        style={styles.fab}
+        onPress={onPress}
+    />
+)
 
-export default AddExpenseButton;
+export default AddExpenseButton
 
 const styles = StyleSheet.create({
-  button: {
-    position: 'absolute',
-    bottom: 30,
-    right: 30,
-    backgroundColor: '#4caf50',
-    borderRadius: 30,
-    width: 60,
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 4,
-  },
-  plus: {
-    fontSize: 30,
-    color: 'white',
-  },
-});
+    fab: {
+        position: 'absolute',
+        right: 20,
+        bottom: 24,
+        backgroundColor: INK,
+    },
+})
