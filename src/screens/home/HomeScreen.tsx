@@ -9,6 +9,7 @@ import {
     getAllEvents, getAllRoutines, getAllTodos, getRoutineCompletionMap
 } from '../../database'
 import { Header } from '../../components'
+import { CREAM } from '../../constants/appColors'
 
 // 저장소 초기화 및 출력용 임시 버튼이 추가돼있습니다. 
 const HomeScreen = () => {
@@ -44,7 +45,7 @@ const HomeScreen = () => {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+        <View style={{ flex: 1, backgroundColor: CREAM }}>
             <Header 
                 title="홈"
                 showBackButton={false}

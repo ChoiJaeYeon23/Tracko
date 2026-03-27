@@ -4,9 +4,10 @@ import {
     Text,
     TouchableOpacity,
     StyleSheet,
-    SafeAreaView
+    SafeAreaView,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { CREAM, WHITE, INK, BORDER } from '../constants/appColors'
 
 interface HeaderProps {
     title: string
@@ -14,10 +15,10 @@ interface HeaderProps {
     onBackPress?: () => void
 }
 
-const Header: React.FC<HeaderProps> = ({ 
-    title, 
-    showBackButton = true, 
-    onBackPress 
+const Header: React.FC<HeaderProps> = ({
+    title,
+    showBackButton = true,
+    onBackPress,
 }) => {
     const navigation = useNavigation()
 
@@ -42,14 +43,12 @@ const Header: React.FC<HeaderProps> = ({
                         </TouchableOpacity>
                     )}
                 </View>
-                
+
                 <View style={styles.centerSection}>
                     <Text style={styles.title}>{title}</Text>
                 </View>
-                
-                <View style={styles.rightSection}>
-                    {/* 오른쪽에 추가 버튼이 필요한 경우 여기에 추가 */}
-                </View>
+
+                <View style={styles.rightSection} />
             </View>
         </SafeAreaView>
     )
@@ -57,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({
 
 const styles = StyleSheet.create({
     safeArea: {
-        backgroundColor: '#FFF8E1',
+        backgroundColor: CREAM,
     },
     container: {
         flexDirection: 'row',
@@ -65,12 +64,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 16,
         paddingVertical: 12,
-        backgroundColor: '#FFF8E1',
-        shadowColor: '#FFC107',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        elevation: 3,
+        backgroundColor: CREAM,
+        borderBottomWidth: 1,
+        borderBottomColor: BORDER,
+        shadowColor: INK,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.06,
+        shadowRadius: 3,
+        elevation: 2,
     },
     leftSection: {
         width: 40,
@@ -82,30 +83,26 @@ const styles = StyleSheet.create({
     },
     rightSection: {
         width: 40,
-        alignItems: 'flex-end',
     },
     backButton: {
         width: 32,
         height: 32,
         borderRadius: 16,
-        backgroundColor: '#FFE082',
+        backgroundColor: WHITE,
+        borderWidth: 1,
+        borderColor: BORDER,
         justifyContent: 'center',
         alignItems: 'center',
-        shadowColor: '#FF8F00',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-        elevation: 2,
     },
     backButtonText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#F57C00',
+        color: INK,
     },
     title: {
         fontSize: 18,
         fontWeight: '700',
-        color: '#2E2E2E',
+        color: INK,
         textAlign: 'center',
     },
 })

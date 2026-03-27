@@ -13,6 +13,7 @@ import {
     updateTodo,
     deleteTodo
 } from '../../../database'
+import { WHITE, INK, INK_MUTED, BORDER } from '../../../constants/appColors'
 
 const TodoScreen = (
     { selectedDate }: { selectedDate: string }
@@ -94,7 +95,7 @@ const TodoScreen = (
                         height: 24,
                         borderRadius: 4,
                         borderWidth: 2,
-                        borderColor: '#555',
+                        borderColor: INK,
                         alignItems: 'center',
                         justifyContent: 'center',
                         marginRight: 12,
@@ -110,7 +111,7 @@ const TodoScreen = (
                         fontSize: 16, 
                         fontWeight: 'bold',
                         textDecorationLine: item.isCompleted ? 'line-through' : 'none',
-                        color: item.isCompleted ? '#999' : '#000'
+                        color: item.isCompleted ? INK_MUTED : INK
                     }}>
                         {item.title}
                     </Text>
@@ -120,20 +121,20 @@ const TodoScreen = (
             <TouchableOpacity
                 onPress={() => handleDeleteTodo(item)}
                 style={{
-                    backgroundColor: '#ff4444',
+                    backgroundColor: INK,
                     paddingHorizontal: 8,
                     paddingVertical: 4,
                     borderRadius: 4,
                     marginLeft: 10
                 }}
             >
-                <Text style={{ color: 'white', fontSize: 12 }}>삭제</Text>
+                <Text style={{ color: WHITE, fontSize: 12 }}>삭제</Text>
             </TouchableOpacity>
         </View>
     )
 
     return (
-        <View>
+        <View style={{ backgroundColor: WHITE, flex: 1 }}>
             <FlatList
                 data={filteredTodos}
                 renderItem={renderItem}

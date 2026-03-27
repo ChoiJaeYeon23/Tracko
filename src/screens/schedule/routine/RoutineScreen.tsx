@@ -15,6 +15,7 @@ import {
     deleteRoutine
 } from '../../../database'
 import { Routine } from '../../../types'
+import { WHITE, INK, INK_MUTED } from '../../../constants/appColors'
 
 const RoutineScreen = (
     { selectedDate }: { selectedDate: string }
@@ -132,7 +133,7 @@ const RoutineScreen = (
                 <Text style={{ marginRight: 10, flex: 1 }}>
                     {item.title} {item.time && item.time}
                 </Text>
-                <Text style={{ marginRight: 10, fontSize: 12, color: '#666' }}>
+                <Text style={{ marginRight: 10, fontSize: 12, color: INK_MUTED }}>
                     {item.daysOfWeek.map((d) => ['일', '월', '화', '수', '목', '금', '토'][d]).join(', ')}
                 </Text>
                 <TouchableOpacity
@@ -146,20 +147,20 @@ const RoutineScreen = (
             <TouchableOpacity
                 onPress={() => handleDeleteRoutine(item)}
                 style={{
-                    backgroundColor: '#ff4444',
+                    backgroundColor: INK,
                     paddingHorizontal: 8,
                     paddingVertical: 4,
                     borderRadius: 4,
                     marginLeft: 10
                 }}
             >
-                <Text style={{ color: 'white', fontSize: 12 }}>삭제</Text>
+                <Text style={{ color: WHITE, fontSize: 12 }}>삭제</Text>
             </TouchableOpacity>
         </View>
     )
 
     return (
-        <View>
+        <View style={{ backgroundColor: WHITE, flex: 1 }}>
             <FlatList
                 data={selectedRoutines}
                 keyExtractor={(item) => item.id}

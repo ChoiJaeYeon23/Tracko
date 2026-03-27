@@ -4,6 +4,7 @@ import {
     TouchableOpacity,
 } from 'react-native'
 import dayjs from 'dayjs'
+import { CREAM, WHITE, INK, INK_MUTED } from '../../../constants/appColors'
 import { useState, useEffect } from 'react'
 import { getAllRoutines, getAllTodos, getAllEvents } from '../../../database'
 
@@ -134,7 +135,7 @@ for (let i = 1; i <= daysInMonth; i++) {
                         width: 6,
                         height: 6,
                         borderRadius: 3,
-                        backgroundColor: '#ff8fab',
+                        backgroundColor: INK,
                         marginRight: 2,
                     }}
                 />
@@ -149,7 +150,9 @@ for (let i = 1; i <= daysInMonth; i++) {
                         width: 6,
                         height: 6,
                         borderRadius: 3,
-                        backgroundColor: '#ffd966',
+                        borderWidth: 1.5,
+                        borderColor: INK,
+                        backgroundColor: 'transparent',
                         marginRight: 2,
                     }}
                 />
@@ -161,10 +164,10 @@ for (let i = 1; i <= daysInMonth; i++) {
                 <View
                     key="event"
                     style={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: 3,
-                        backgroundColor: '#7ecfff',
+                        width: 5,
+                        height: 5,
+                        borderRadius: 1,
+                        backgroundColor: INK,
                     }}
                 />
             )
@@ -188,21 +191,21 @@ for (let i = 1; i <= daysInMonth; i++) {
     }
 
     return (
-        <View style={{ flex: 1, padding: 16 }}>
+        <View style={{ flex: 1, padding: 16, backgroundColor: CREAM }}>
             {/* 월 이동 헤더 */}
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                 <TouchableOpacity 
                     onPress={() => handleMonthChange('prev')}
                     style={{ padding: 12, minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }}
                 >
-                    <Text style={{ fontSize: 18 }}>{'<'}</Text>
+                    <Text style={{ fontSize: 18, color: INK }}>{'<'}</Text>
                 </TouchableOpacity>
-                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{currentDate.format('YYYY년 MM월')}</Text>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: INK }}>{currentDate.format('YYYY년 MM월')}</Text>
                 <TouchableOpacity 
                     onPress={() => handleMonthChange('next')}
                     style={{ padding: 12, minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }}
                 >
-                    <Text style={{ fontSize: 18 }}>{'>'}</Text>
+                    <Text style={{ fontSize: 18, color: INK }}>{'>'}</Text>
                 </TouchableOpacity>
             </View>
 
@@ -210,7 +213,7 @@ for (let i = 1; i <= daysInMonth; i++) {
             <View style={{ flexDirection: 'row', marginBottom: 8 }}>
                 {['일', '월', '화', '수', '목', '금', '토'].map((d) => (
                     <View key={d} style={{ flex: 1, alignItems: 'center' }}>
-                        <Text style={{ fontSize: 14, fontWeight: '600', color: '#444' }}>
+                        <Text style={{ fontSize: 14, fontWeight: '600', color: INK_MUTED }}>
                             {d}
                         </Text>
                     </View>
@@ -243,11 +246,11 @@ for (let i = 1; i <= daysInMonth; i++) {
                                     <View style={{
                                         width: 32, height: 32,
                                         borderRadius: 16,
-                                        backgroundColor: selected ? '#4b9eff' : 'transparent',
+                                        backgroundColor: selected ? WHITE : 'transparent',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                     }}>
-                                        <Text style={{ fontSize: 14, color: selected ? '#fff' : '#000' }}>
+                                        <Text style={{ fontSize: 14, color: selected ? INK : INK_MUTED }}>
                                             {date.date()}
                                         </Text>
                                     </View>

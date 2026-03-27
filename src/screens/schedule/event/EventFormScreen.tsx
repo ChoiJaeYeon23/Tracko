@@ -18,6 +18,14 @@ import dayjs from 'dayjs'
 import { Event } from '../../../types'
 import { addEvent, updateEvent } from '../../../database'
 import { Header } from '../../../components'
+import {
+    CREAM,
+    WHITE,
+    INK,
+    INK_MUTED,
+    BORDER,
+    SCRIM,
+} from '../../../constants/appColors'
 
 type EventFormScreenParams = {
     mode: 'create' | 'edit'
@@ -200,7 +208,7 @@ const EventFormScreen = () => {
                         onChangeText={setTitle}
                         placeholder="제목 입력"
                         style={styles.input}
-                        placeholderTextColor="#999"
+                        placeholderTextColor={INK_MUTED}
                     />
                 </View>
 
@@ -212,7 +220,7 @@ const EventFormScreen = () => {
                         placeholder="설명을 입력하세요"
                         multiline
                         style={[styles.input, styles.textArea]}
-                        placeholderTextColor="#999"
+                        placeholderTextColor={INK_MUTED}
                         textAlignVertical="top"
                     />
                 </View>
@@ -292,7 +300,7 @@ const EventFormScreen = () => {
                         onChangeText={setLocation}
                         placeholder="장소를 입력하세요"
                         style={styles.input}
-                        placeholderTextColor="#999"
+                        placeholderTextColor={INK_MUTED}
                     />
                 </View>
 
@@ -451,10 +459,9 @@ const EventFormScreen = () => {
 }
 
 const styles = StyleSheet.create({
-    // 메인 컨테이너
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: CREAM,
     },
     content: {
         flex: 1,
@@ -466,21 +473,22 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#F57C00',
+        color: INK,
         marginBottom: 10,
     },
     input: {
-        borderWidth: 2,
-        borderColor: '#FFE082',
+        borderWidth: 1,
+        borderColor: BORDER,
         borderRadius: 12,
         padding: 15,
-        backgroundColor: '#fff',
+        backgroundColor: WHITE,
         fontSize: 16,
-        shadowColor: '#FFC107',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
+        color: INK,
+        shadowColor: INK,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 3,
+        elevation: 1,
     },
     textArea: {
         height: 100,
@@ -495,90 +503,89 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     submitButton: {
-        backgroundColor: '#FFC107',
+        backgroundColor: INK,
         paddingVertical: 15,
         borderRadius: 12,
         alignItems: 'center',
         marginHorizontal: 20,
         marginBottom: 30,
-        shadowColor: '#FF8F00',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 5,
+        shadowColor: INK,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.12,
+        shadowRadius: 6,
+        elevation: 3,
     },
     submitButtonText: {
         fontSize: 18,
         fontWeight: '700',
-        color: '#fff',
+        color: WHITE,
     },
     dateButton: {
-        borderWidth: 2,
-        borderColor: '#FFE082',
+        borderWidth: 1,
+        borderColor: BORDER,
         borderRadius: 12,
         padding: 15,
-        backgroundColor: '#fff',
+        backgroundColor: WHITE,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        shadowColor: '#FFC107',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
+        shadowColor: INK,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 3,
+        elevation: 1,
     },
     dateButtonText: {
         fontSize: 16,
-        color: '#F57C00',
+        color: INK,
         fontWeight: '500',
     },
     dateButtonIcon: {
         fontSize: 18,
-        color: '#FFC107',
+        color: INK_MUTED,
     },
     timeButton: {
-        borderWidth: 2,
-        borderColor: '#FFE082',
+        borderWidth: 1,
+        borderColor: BORDER,
         borderRadius: 12,
         padding: 15,
-        backgroundColor: '#fff',
+        backgroundColor: WHITE,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        shadowColor: '#FFC107',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
+        shadowColor: INK,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 3,
+        elevation: 1,
     },
     timeButtonText: {
         fontSize: 16,
-        color: '#F57C00',
+        color: INK,
         fontWeight: '500',
     },
     timeButtonIcon: {
         fontSize: 18,
-        color: '#FFC107',
+        color: INK_MUTED,
     },
-    // 모달 스타일
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: SCRIM,
         justifyContent: 'center',
         alignItems: 'center',
     },
     modalContainer: {
-        backgroundColor: '#fff',
+        backgroundColor: WHITE,
         borderRadius: 20,
         padding: 0,
         width: '90%',
         maxWidth: 400,
-        shadowColor: '#000',
+        shadowColor: INK,
         shadowOffset: {
             width: 0,
             height: 10,
         },
-        shadowOpacity: 0.25,
+        shadowOpacity: 0.12,
         shadowRadius: 20,
         elevation: 10,
     },
@@ -588,27 +595,29 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
         borderBottomWidth: 1,
-        borderBottomColor: '#f0f0f0',
-        backgroundColor: '#FFFFFF',
+        borderBottomColor: BORDER,
+        backgroundColor: WHITE,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
     },
     modalTitle: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#F57C00',
+        color: INK,
     },
     closeButton: {
         width: 30,
         height: 30,
         borderRadius: 15,
-        backgroundColor: '#FFE082',
+        backgroundColor: CREAM,
+        borderWidth: 1,
+        borderColor: BORDER,
         justifyContent: 'center',
         alignItems: 'center',
     },
     closeButtonText: {
         fontSize: 16,
-        color: '#F57C00',
+        color: INK,
         fontWeight: '600',
     },
     datePickerContainer: {
@@ -639,22 +648,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     cancelButton: {
-        backgroundColor: '#f5f5f5',
+        backgroundColor: CREAM,
         borderWidth: 1,
-        borderColor: '#ddd',
+        borderColor: BORDER,
     },
     confirmButton: {
-        backgroundColor: '#FFC107',
+        backgroundColor: INK,
     },
     cancelButtonText: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#666',
+        color: INK_MUTED,
     },
     confirmButtonText: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#fff',
+        color: WHITE,
     },
 })
 

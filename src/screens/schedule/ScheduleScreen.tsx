@@ -16,6 +16,7 @@ import {
 } from '../../screens'
 import { ScheduleStackParamList } from '../../navigation/ScheduleStackNavigator'
 import { Header } from '../../components'
+import { CREAM, WHITE, INK, INK_MUTED, BORDER } from '../../constants/appColors'
 
 const initialLayout = { width: Dimensions.get('window').width }
 
@@ -48,10 +49,14 @@ const ScheduleScreen = ({ navigation }: Props) => {
     const renderTabBar = (props: any) => (
         <TabBar
             {...props}
-            indicatorStyle={{ backgroundColor: '#4b9eff' }}
-            style={{ backgroundColor: '#fff' }}
-            activeColor="#4B9EFF"
-            inactiveColor="#999"
+            indicatorStyle={{ backgroundColor: INK, height: 3 }}
+            style={{
+                backgroundColor: WHITE,
+                borderTopWidth: 1,
+                borderTopColor: BORDER,
+            }}
+            activeColor={INK}
+            inactiveColor={INK_MUTED}
             labelStyle={{ fontWeight: '600' }}
         />
     )
@@ -73,19 +78,19 @@ const ScheduleScreen = ({ navigation }: Props) => {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+        <View style={{ flex: 1, backgroundColor: CREAM }}>
             <Header 
                 title="일정"
                 showBackButton={false}
             />
             <SafeAreaView style={{ flex: 1 }}>
-                <View style={{ flex: 0.7 }}>
+                <View style={{ flex: 0.7, backgroundColor: CREAM }}>
                     <CalendarScreen
                         selectedDate={selectedDate}
                         onDateChange={setSelectedDate}
                     />
                 </View>
-                <View style={{ flex: 0.4 }}>
+                <View style={{ flex: 0.4, backgroundColor: WHITE }}>
                     <TabView
                         key={selectedDate}
                         navigationState={{ index, routes }}
@@ -95,8 +100,14 @@ const ScheduleScreen = ({ navigation }: Props) => {
                         renderTabBar={renderTabBar}
                     />
                     <FAB
-                        style={{ position: 'absolute', right: 16, bottom: 16 }}
-                        icon='plus'
+                        style={{
+                            position: 'absolute',
+                            right: 16,
+                            bottom: 16,
+                            backgroundColor: INK,
+                        }}
+                        color={WHITE}
+                        icon="plus"
                         onPress={handleFabPress}
                     />
                 </View>

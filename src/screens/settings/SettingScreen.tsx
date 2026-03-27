@@ -7,6 +7,7 @@ import {
     Switch
 } from 'react-native'
 import { Header } from '../../components'
+import { CREAM, WHITE, INK, INK_MUTED, BORDER } from '../../constants/appColors'
 
 const SettingScreen = () => {
     const [isNotificationEnabled, setIsNotificationEnabled] = useState<boolean>(false)
@@ -21,7 +22,7 @@ const SettingScreen = () => {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+        <View style={{ flex: 1, backgroundColor: CREAM }}>
             <Header 
                 title="설정"
                 showBackButton={false}
@@ -29,11 +30,12 @@ const SettingScreen = () => {
             <SafeAreaView style={{ flex: 1, padding: 20 }}>
                 <View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                        <Text style={{ fontSize: 16, fontWeight: '600' }}>알림 설정</Text>
+                        <Text style={{ fontSize: 16, fontWeight: '600', color: INK }}>알림 설정</Text>
                         <Switch
                             value={isNotificationEnabled}
                             onValueChange={toggleNotification}
-                            trackColor={{ false: '#767577', true: '#666666' }}
+                            trackColor={{ false: BORDER, true: INK_MUTED }}
+                            thumbColor={WHITE}
                         />
                     </View>
                 </View>

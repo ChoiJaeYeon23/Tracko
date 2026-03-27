@@ -10,6 +10,7 @@ import { useFocusEffect } from '@react-navigation/native'
 import dayjs from 'dayjs'
 import { Event } from '../../../types'
 import { getAllEvents, deleteEvent } from '../../../database'
+import { CREAM, WHITE, INK, INK_MUTED, BORDER } from '../../../constants/appColors'
 
 // 선택한 날짜 기준 이번 주 월요일, 일요일 구하는 함수
 const getWeekRange = (date: dayjs.Dayjs) => {
@@ -108,49 +109,51 @@ const EventScreen = (
     console.log('[render] sections:', sections)
 
     return (
-        <View style={{ padding: 10, flex: 1 }}>
+        <View style={{ padding: 10, flex: 1, backgroundColor: WHITE }}>
             <SectionList
                 sections={sections}
                 keyExtractor={(item) => item.id}
                 renderSectionHeader={({ section: { title } }) => (
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 8, backgroundColor: 'powderblue' }}>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 8, backgroundColor: CREAM, color: INK, paddingVertical: 6, paddingHorizontal: 4, borderRadius: 6 }}>
                         {title}
                     </Text>
                 )}
                 renderItem={({ item, section }) => {
                     if (section.isEmpty) {
                         return (
-                            <Text style={{ padding: 12, color: '#999' }}>{item.title}</Text>
+                            <Text style={{ padding: 12, color: INK_MUTED }}>{item.title}</Text>
                         )
                     }
 
                     return (
                         <View style={{ 
                             padding: 12, 
-                            backgroundColor: '#f9f9f9', 
+                            backgroundColor: WHITE, 
                             borderRadius: 8, 
                             marginBottom: 10,
+                            borderWidth: 1,
+                            borderColor: BORDER,
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             alignItems: 'center'
                         }}>
                             <View style={{ flex: 1 }}>
-                                <Text style={{ fontSize: 16, fontWeight: '600' }}>{item.title}</Text>
-                                <Text style={{ color: '#555' }}>날짜: {dayjs(item.date).format('YYYY-MM-DD')}</Text>
-                                {item.location && <Text style={{ color: '#555' }}>장소: {item.location}</Text>}
+                                <Text style={{ fontSize: 16, fontWeight: '600', color: INK }}>{item.title}</Text>
+                                <Text style={{ color: INK_MUTED }}>날짜: {dayjs(item.date).format('YYYY-MM-DD')}</Text>
+                                {item.location && <Text style={{ color: INK_MUTED }}>장소: {item.location}</Text>}
                             </View>
                             
                             <TouchableOpacity
                                 onPress={() => handleDeleteEvent(item)}
                                 style={{
-                                    backgroundColor: '#ff4444',
+                                    backgroundColor: INK,
                                     paddingHorizontal: 8,
                                     paddingVertical: 4,
                                     borderRadius: 4,
                                     marginLeft: 10
                                 }}
                             >
-                                <Text style={{ color: 'white', fontSize: 12 }}>삭제</Text>
+                                <Text style={{ color: WHITE, fontSize: 12 }}>삭제</Text>
                             </TouchableOpacity>
                         </View>
                     )

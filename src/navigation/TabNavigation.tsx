@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import { CREAM, WHITE, INK, INK_MUTED } from '../constants/appColors'
 import {
     AnalysisScreen,
     HomeScreen,
@@ -15,13 +16,13 @@ const TabNavigation = () => {
         <BottomTab.Navigator 
             screenOptions={{ 
                 headerShown: false,
-                tabBarActiveTintColor: '#FF8F00',
-                tabBarInactiveTintColor: '#FFB74D',
+                tabBarActiveTintColor: INK,
+                tabBarInactiveTintColor: INK_MUTED,
 
                 tabBarStyle: {
-                    backgroundColor: '#FFF8E1',
+                    backgroundColor: CREAM,
                     borderTopWidth: 1,
-                    borderTopColor: '#FFE082',
+                    borderTopColor: WHITE,
                     height: 60,
                 },
                 tabBarItemStyle: {
