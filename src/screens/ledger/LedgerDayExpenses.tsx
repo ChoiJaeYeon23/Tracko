@@ -2,7 +2,8 @@ import React, { useMemo } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import dayjs from 'dayjs'
 import { getLedgerCategory } from '../../constants/ledgerCategories'
-import { entryKind } from '../../hooks/useLedger'
+import { ledgerEntryKind } from '../../utils/ledgerEntryKind'
+import { formatKrw } from '../../utils/formatKrw'
 import type { LedgerExpense } from '../../types/ledger'
 import {
     WHITE,
@@ -12,6 +13,7 @@ import {
     INK_FAINT,
     LEDGER_ROW_INCOME,
 } from '../../constants/appColors'
+import { typography } from '../../theme/typography'
 
 type Props = {
     selectedDate: string
@@ -35,10 +37,10 @@ const LedgerDayExpenses = ({
     )
 
     const expenseTotal = sorted
-        .filter(e => entryKind(e) === 'expense')
+        .filter(e => ledgerEntryKind(e) === 'expense')
         .reduce((s, e) => s + e.amount, 0)
     const incomeTotal = sorted
-        .filter(e => entryKind(e) === 'income')
+        .filter(e => ledgerEntryKind(e) === 'income')
         .reduce((s, e) => s + e.amount, 0)
 
     return (
@@ -51,11 +53,11 @@ const LedgerDayExpenses = ({
                     <Text style={styles.sub}>
                         수입{' '}
                         <Text style={styles.incomeAmt}>
-                            {incomeTotal.toLocaleString('ko-KR')}원
+                            {formatKrw(incomeTotal)}원
                         </Text>
                         {' · '}지출{' '}
                         <Text style={styles.expenseAmt}>
-                            {expenseTotal.toLocaleString('ko-KR')}원
+                            {formatKrw(expenseTotal)}원
                         </Text>
                         {' · '}
                         {sorted.length}건
@@ -72,7 +74,7 @@ const LedgerDayExpenses = ({
             ) : (
                 sorted.map(e => {
                     const cat = getLedgerCategory(e.categoryKey)
-                    const inc = entryKind(e) === 'income'
+                    const inc = ledgerEntryKind(e) === 'income'
                     return (
                         <View key={e.id} style={styles.row}>
                             <View style={styles.rowLeft}>
@@ -116,7 +118,7 @@ const LedgerDayExpenses = ({
                                     ]}
                                 >
                                     {inc ? '+' : ''}
-                                    {e.amount.toLocaleString('ko-KR')}원
+                                    {formatKrw(e.amount)}원
                                 </Text>
                                 <TouchableOpacity
                                     onPress={() => onDeleteExpense(e.id)}
@@ -156,30 +158,28 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     title: {
-        fontSize: 16,
-        fontWeight: '700',
+        ...typography.bodyLgBold,
         color: INK,
     },
     sub: {
         marginTop: 4,
-        fontSize: 12,
+        ...typography.caption,
         color: INK_MUTED,
     },
     incomeAmt: {
-        fontWeight: '700',
+        ...typography.captionBold,
         color: LEDGER_ROW_INCOME,
     },
     expenseAmt: {
-        fontWeight: '700',
+        ...typography.captionBold,
         color: INK,
     },
     close: {
-        fontSize: 13,
-        fontWeight: '600',
+        ...typography.bodySmSemi,
         color: INK_MUTED,
     },
     empty: {
-        fontSize: 13,
+        ...typography.bodySm,
         color: INK_MUTED,
         paddingVertical: 8,
     },
@@ -213,8 +213,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
     },
     badge: {
-        fontSize: 10,
-        fontWeight: '800',
+        ...typography.micro,
         paddingHorizontal: 6,
         paddingVertical: 2,
         borderRadius: 6,
@@ -231,21 +230,19 @@ const styles = StyleSheet.create({
         color: INK_MUTED,
     },
     catLabel: {
-        fontSize: 14,
-        fontWeight: '600',
+        ...typography.bodySemi,
         color: INK,
     },
     memo: {
         marginTop: 2,
-        fontSize: 12,
+        ...typography.caption,
         color: INK_MUTED,
     },
     rowRight: {
         alignItems: 'flex-end',
     },
     amount: {
-        fontSize: 14,
-        fontWeight: '700',
+        ...typography.bodyBold,
         color: INK,
     },
     amountIncome: {
@@ -253,8 +250,7 @@ const styles = StyleSheet.create({
     },
     delete: {
         marginTop: 6,
-        fontSize: 12,
-        fontWeight: '600',
+        ...typography.captionSemi,
         color: INK_MUTED,
     },
 })

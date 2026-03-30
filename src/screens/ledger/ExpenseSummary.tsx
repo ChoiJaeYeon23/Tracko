@@ -21,6 +21,8 @@ import {
     SCRIM,
     LEDGER_ROW_INCOME,
 } from '../../constants/appColors'
+import { formatKrw } from '../../utils/formatKrw'
+import { typography } from '../../theme/typography'
 
 type Props = {
     monthLabel: string
@@ -74,20 +76,20 @@ const ExpenseSummary = ({
             <View style={styles.budgetRow}>
                 <Text style={styles.muted}>이번 달 예산</Text>
                 <Text style={styles.budgetAmount}>
-                    {budget > 0 ? `${budget.toLocaleString()}원` : '미설정'}
+                    {budget > 0 ? `${formatKrw(budget)}원` : '미설정'}
                 </Text>
             </View>
 
             <Text style={styles.spentLabel}>수입 합계</Text>
             <Text style={styles.incomeBig}>
                 {totalIncome > 0
-                    ? `+${totalIncome.toLocaleString()}원`
+                    ? `+${formatKrw(totalIncome)}원`
                     : '0원'}
             </Text>
 
             <Text style={[styles.spentLabel, styles.spentLabelSp]}>지출 합계</Text>
             <Text style={styles.spentBig}>
-                {totalSpent.toLocaleString()}원
+                {formatKrw(totalSpent)}원
             </Text>
 
             {budget > 0 ? (
@@ -104,7 +106,7 @@ const ExpenseSummary = ({
                         />
                     </View>
                     <View style={styles.percentRow}>
-                        <Text style={styles.percentText}>
+                            <Text style={styles.percentText}>
                             예산 대비{' '}
                             <Text style={styles.percentBold}>
                                 {Math.round(displayPercent)}%
@@ -113,16 +115,18 @@ const ExpenseSummary = ({
                         </Text>
                         <Text
                             style={[
+                                overBudget
+                                    ? typography.bodySmHeavy
+                                    : typography.bodySmSemi,
                                 styles.remain,
                                 {
                                     color: overBudget ? INK : INK_MUTED,
-                                    fontWeight: overBudget ? '800' : '600',
                                 },
                             ]}
                         >
                             {overBudget
-                                ? `${Math.abs(remaining).toLocaleString()}원 초과`
-                                : `남음 ${remaining.toLocaleString()}원`}
+                                ? `${formatKrw(Math.abs(remaining))}원 초과`
+                                : `남음 ${formatKrw(remaining)}원`}
                         </Text>
                     </View>
                 </>
@@ -197,8 +201,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     month: {
-        fontSize: 17,
-        fontWeight: '700',
+        ...typography.titleMd,
         color: INK,
     },
     editChip: {
@@ -210,39 +213,35 @@ const styles = StyleSheet.create({
         borderColor: BORDER,
     },
     editChipText: {
-        fontSize: 13,
-        fontWeight: '600',
+        ...typography.bodySmSemi,
         color: INK,
     },
     budgetRow: {
         marginBottom: 14,
     },
     muted: {
-        fontSize: 13,
+        ...typography.bodySm,
         color: INK_MUTED,
         marginBottom: 4,
     },
     budgetAmount: {
-        fontSize: 20,
-        fontWeight: '700',
+        ...typography.headline,
         color: INK,
     },
     spentLabel: {
-        fontSize: 13,
+        ...typography.bodySm,
         color: INK_MUTED,
     },
     spentLabelSp: {
         marginTop: 14,
     },
     incomeBig: {
-        fontSize: 22,
-        fontWeight: '800',
+        ...typography.display,
         color: LEDGER_ROW_INCOME,
         marginTop: 4,
     },
     spentBig: {
-        fontSize: 28,
-        fontWeight: '800',
+        ...typography.displayXL,
         color: INK,
         marginTop: 4,
         marginBottom: 12,
@@ -264,20 +263,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     percentText: {
-        fontSize: 14,
+        ...typography.body,
         color: INK_MUTED,
     },
     percentBold: {
-        fontWeight: '800',
+        ...typography.bodyHeavy,
         color: INK,
     },
-    remain: {
-        fontSize: 13,
-        fontWeight: '600',
-    },
+    remain: {},
     hint: {
         marginTop: 4,
-        fontSize: 14,
+        ...typography.body,
         color: INK_FAINT,
         lineHeight: 20,
     },
@@ -298,8 +294,7 @@ const styles = StyleSheet.create({
         borderColor: BORDER,
     },
     dialogTitle: {
-        fontSize: 17,
-        fontWeight: '700',
+        ...typography.titleMd,
         color: INK,
         marginBottom: 12,
     },
@@ -309,7 +304,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         paddingHorizontal: 14,
         paddingVertical: 12,
-        fontSize: 16,
+        ...typography.input,
         color: INK,
     },
     dialogActions: {
@@ -331,14 +326,14 @@ const styles = StyleSheet.create({
         borderColor: BORDER,
     },
     btnGhostText: {
+        ...typography.bodyLgSemi,
         color: INK_MUTED,
-        fontWeight: '600',
     },
     btnPrimary: {
         backgroundColor: INK,
     },
     btnPrimaryText: {
+        ...typography.bodyLgBold,
         color: WHITE,
-        fontWeight: '700',
     },
 })

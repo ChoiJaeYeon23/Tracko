@@ -28,6 +28,7 @@ import {
     TRACK_BG,
     SCRIM,
 } from '../../constants/appColors'
+import { typography } from '../../theme/typography'
 
 type Props = {
     visible: boolean
@@ -201,7 +202,7 @@ const AddExpenseModal = ({
                                     <Text
                                         style={[
                                             styles.chipTxt,
-                                            sel && { fontWeight: '700' },
+                                            sel && typography.bodyBold,
                                         ]}
                                     >
                                         {c.label}
@@ -334,8 +335,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     title: {
-        fontSize: 20,
-        fontWeight: '800',
+        ...typography.headlineHeavy,
         color: INK,
         marginBottom: 12,
     },
@@ -360,21 +360,19 @@ const styles = StyleSheet.create({
         borderColor: BORDER,
     },
     kindChipTxt: {
-        fontSize: 15,
-        fontWeight: '600',
+        ...typography.bodyMd,
         color: INK_MUTED,
     },
     kindChipTxtOn: {
         color: INK,
-        fontWeight: '700',
+        ...typography.bodyMdBold,
     },
     addCatPlaceholder: {
         width: 88,
         height: 32,
     },
     label: {
-        fontSize: 13,
-        fontWeight: '600',
+        ...typography.bodySmSemi,
         color: INK_MUTED,
         marginBottom: 8,
     },
@@ -401,8 +399,7 @@ const styles = StyleSheet.create({
         borderColor: BORDER,
     },
     addCatBtnTxt: {
-        fontSize: 13,
-        fontWeight: '700',
+        ...typography.bodySmBold,
         color: INK,
     },
     input: {
@@ -411,7 +408,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         paddingHorizontal: 14,
         paddingVertical: 12,
-        fontSize: 16,
+        ...typography.input,
         color: INK,
     },
     chips: {
@@ -436,7 +433,7 @@ const styles = StyleSheet.create({
         marginRight: 8,
     },
     chipTxt: {
-        fontSize: 14,
+        ...typography.body,
         color: INK,
     },
     actions: {
@@ -458,15 +455,15 @@ const styles = StyleSheet.create({
         borderColor: BORDER,
     },
     cancelTxt: {
+        ...typography.bodyLgSemi,
         color: INK_MUTED,
-        fontWeight: '600',
     },
     save: {
         backgroundColor: INK,
     },
     saveTxt: {
+        ...typography.bodyLgBold,
         color: WHITE,
-        fontWeight: '700',
     },
     innerRoot: {
         flex: 1,
@@ -485,14 +482,12 @@ const styles = StyleSheet.create({
         borderColor: BORDER,
     },
     innerTitle: {
-        fontSize: 18,
-        fontWeight: '800',
+        ...typography.titleHeavy,
         color: INK,
         marginBottom: 14,
     },
     innerHint: {
-        fontSize: 13,
-        fontWeight: '600',
+        ...typography.bodySmSemi,
         color: INK_MUTED,
         marginBottom: 8,
     },

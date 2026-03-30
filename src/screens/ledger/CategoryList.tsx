@@ -20,6 +20,8 @@ import {
     BORDER,
     TRACK_BG,
 } from '../../constants/appColors'
+import { formatKrw } from '../../utils/formatKrw'
+import { typography } from '../../theme/typography'
 
 if (
     Platform.OS === 'android' &&
@@ -82,7 +84,7 @@ const CategoryList = ({ aggregates, totalSpent, onDeleteExpense }: Props) => {
                             </View>
                             <View style={styles.headRight}>
                                 <Text style={styles.catAmount}>
-                                    {agg.total.toLocaleString()}원
+                                    {formatKrw(agg.total)}원
                                 </Text>
                                 <Text style={styles.catShare}>
                                     {totalSpent > 0
@@ -121,7 +123,7 @@ const CategoryList = ({ aggregates, totalSpent, onDeleteExpense }: Props) => {
                                             </Text>
                                         </View>
                                         <Text style={styles.itemAmt}>
-                                            {item.amount.toLocaleString()}
+                                            {formatKrw(item.amount)}
                                         </Text>
                                         <TouchableOpacity
                                             onPress={() =>
@@ -155,13 +157,12 @@ const styles = StyleSheet.create({
         marginBottom: 96,
     },
     sectionTitle: {
-        fontSize: 17,
-        fontWeight: '700',
+        ...typography.titleMd,
         color: INK,
         marginBottom: 4,
     },
     sectionSub: {
-        fontSize: 13,
+        ...typography.bodySm,
         color: INK_FAINT,
         marginBottom: 14,
         lineHeight: 18,
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
         marginBottom: 96,
     },
     emptyText: {
-        fontSize: 14,
+        ...typography.body,
         color: INK_MUTED,
         lineHeight: 22,
         marginTop: 8,
@@ -207,8 +208,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     catName: {
-        fontSize: 16,
-        fontWeight: '600',
+        ...typography.bodyLgSemi,
         color: INK,
     },
     headRight: {
@@ -216,19 +216,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     catAmount: {
-        fontSize: 15,
-        fontWeight: '700',
+        ...typography.bodyMdBold,
         color: INK,
         marginRight: 8,
     },
     catShare: {
-        fontSize: 13,
+        ...typography.bodySm,
         color: INK_MUTED,
         width: 36,
         textAlign: 'right',
     },
     chev: {
-        fontSize: 12,
+        ...typography.caption,
         color: INK_FAINT,
         marginLeft: 6,
         width: 20,
@@ -256,17 +255,16 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     itemDate: {
-        fontSize: 12,
+        ...typography.caption,
         color: INK_FAINT,
         marginBottom: 2,
     },
     itemMemo: {
-        fontSize: 14,
+        ...typography.body,
         color: INK,
     },
     itemAmt: {
-        fontSize: 14,
-        fontWeight: '700',
+        ...typography.bodyBold,
         color: INK,
         marginRight: 8,
     },
@@ -274,7 +272,7 @@ const styles = StyleSheet.create({
         padding: 4,
     },
     delTxt: {
-        fontSize: 22,
+        ...typography.iconLarge,
         color: INK_MUTED,
         lineHeight: 22,
     },

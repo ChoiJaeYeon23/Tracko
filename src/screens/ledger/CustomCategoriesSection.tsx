@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import type { LedgerCustomCategory } from '../../types/ledger'
 import { INK, INK_MUTED, WHITE, BORDER } from '../../constants/appColors'
+import { typography } from '../../theme/typography'
 
 type Props = {
     items: LedgerCustomCategory[]
@@ -79,13 +80,12 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     title: {
-        fontSize: 17,
-        fontWeight: '700',
+        ...typography.titleMd,
         color: INK,
         marginBottom: 4,
     },
     sub: {
-        fontSize: 13,
+        ...typography.bodySm,
         color: INK_MUTED,
         lineHeight: 18,
         marginBottom: 12,
@@ -115,8 +115,7 @@ const styles = StyleSheet.create({
         marginRight: 8,
     },
     pillTxt: {
-        fontSize: 14,
-        fontWeight: '600',
+        ...typography.bodySemi,
         color: INK,
         flexShrink: 1,
         maxWidth: 140,
@@ -126,7 +125,7 @@ const styles = StyleSheet.create({
         marginLeft: 4,
     },
     del: {
-        fontSize: 20,
+        ...typography.bodyXl,
         color: INK_MUTED,
         lineHeight: 20,
     },

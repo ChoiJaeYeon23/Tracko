@@ -11,6 +11,9 @@ import {
     LEDGER_CAL_EXPENSE_BG,
     LEDGER_CAL_INCOME_BG,
 } from '../../constants/appColors'
+import { WEEKDAY_LABELS_KO } from '../../constants/weekdays'
+import { getMonthGridCells } from '../../utils/monthCalendarGrid'
+import { typography } from '../../theme/typography'
 
 type Props = {
     monthKey: string
@@ -30,22 +33,8 @@ const LedgerSpendingCalendar = ({
     onShiftMonth,
 }: Props) => {
     const anchor = useMemo(() => dayjs(`${monthKey}-01`), [monthKey])
+    const cells = useMemo(() => getMonthGridCells(anchor), [anchor])
     const todayStr = dayjs().format('YYYY-MM-DD')
-
-    const startOfMonth = anchor.startOf('month')
-    const endOfMonth = anchor.endOf('month')
-    const startDay = startOfMonth.day()
-    const daysInMonth = endOfMonth.date()
-
-    const cells: (dayjs.Dayjs | null)[] = []
-    for (let i = 0; i < startDay; i++) cells.push(null)
-    for (let i = 1; i <= daysInMonth; i++) {
-        cells.push(startOfMonth.clone().add(i - 1, 'day'))
-    }
-    const tail = cells.length % 7
-    if (tail !== 0) {
-        for (let i = 0; i < 7 - tail; i++) cells.push(null)
-    }
 
     return (
         <View style={styles.wrap}>
@@ -112,7 +101,7 @@ const LedgerSpendingCalendar = ({
             </View>
 
             <View style={styles.weekRow}>
-                {['일', '월', '화', '수', '목', '금', '토'].map(d => (
+                {WEEKDAY_LABELS_KO.map(d => (
                     <View key={d} style={styles.weekCell}>
                         <Text style={styles.weekText}>{d}</Text>
                     </View>
@@ -222,13 +211,12 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     sectionTitle: {
-        fontSize: 16,
-        fontWeight: '700',
+        ...typography.bodyLgBold,
         color: INK,
     },
     sectionSub: {
         marginTop: 4,
-        fontSize: 12,
+        ...typography.caption,
         color: INK_MUTED,
         lineHeight: 17,
     },
@@ -262,8 +250,7 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     legendText: {
-        fontSize: 12,
-        fontWeight: '600',
+        ...typography.captionSemi,
         color: INK_MUTED,
     },
     monthRow: {
@@ -280,13 +267,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     monthChevron: {
-        fontSize: 18,
+        ...typography.titleSemi,
         color: INK,
-        fontWeight: '600',
     },
     monthLabel: {
-        fontSize: 17,
-        fontWeight: '700',
+        ...typography.titleMd,
         color: INK,
     },
     weekRow: {
@@ -298,8 +283,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     weekText: {
-        fontSize: 12,
-        fontWeight: '600',
+        ...typography.captionSemi,
         color: INK_MUTED,
     },
     gridRow: {
@@ -343,13 +327,12 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     dayNum: {
-        fontSize: 13,
-        fontWeight: '600',
+        ...typography.bodySmSemi,
         color: INK_MUTED,
         zIndex: 1,
     },
     dayNumSelected: {
+        ...typography.bodySmBold,
         color: INK,
-        fontWeight: '700',
     },
 })
