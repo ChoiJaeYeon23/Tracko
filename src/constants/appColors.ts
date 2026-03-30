@@ -15,3 +15,8 @@ export const SCRIM = 'rgba(22, 22, 22, 0.35)'
 /** 하위 호환 — 이전 ACCENT import 유지 */
 export const ACCENT_ORANGE = INK
 export const ACCENT_ORANGE_TEXT = INK
+
+/** 가계부 달력: 일별 지출/수입 표시용 (배경 틴트) */
+export const LEDGER_CAL_EXPENSE_BG = 'rgba(190, 82, 82, 0.28)'
+export const LEDGER_CAL_INCOME_BG = 'rgba(58, 138, 95, 0.28)'
+export const LEDGER_ROW_INCOME = '#2d7a52'

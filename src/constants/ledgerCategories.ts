@@ -22,6 +22,19 @@ export const LEDGER_CATEGORIES: LedgerCategoryDef[] = [
     { key: 'other', label: '기타', color: pc(6) },
 ]
 
+/** 수입 전용 카테고리 (지출 칩과 분리) */
+export const LEDGER_INCOME_CATEGORIES: LedgerCategoryDef[] = [
+    { key: 'income_salary', label: '급여', color: pc(2) },
+    { key: 'income_bonus', label: '보너스', color: pc(3) },
+    { key: 'income_side', label: '부수입', color: pc(4) },
+    { key: 'income_refund', label: '환급', color: pc(5) },
+    { key: 'income_other', label: '기타 수입', color: pc(6) },
+]
+
+export const getIncomeLedgerCategories = (): LedgerCategoryDef[] => [
+    ...LEDGER_INCOME_CATEGORIES,
+]
+
 export const getAllLedgerCategories = (): LedgerCategoryDef[] => {
     const custom = getCustomLedgerCategories().map(c => ({
         key: customCategoryStorageKey(c.id),
@@ -32,6 +45,8 @@ export const getAllLedgerCategories = (): LedgerCategoryDef[] => {
 }
 
 export const getLedgerCategory = (key: string): LedgerCategoryDef => {
+    const incomePreset = LEDGER_INCOME_CATEGORIES.find(c => c.key === key)
+    if (incomePreset) return incomePreset
     const preset = LEDGER_CATEGORIES.find(c => c.key === key)
     if (preset) return preset
     if (key.startsWith('custom:')) {

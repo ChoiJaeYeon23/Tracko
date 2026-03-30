@@ -16,7 +16,10 @@ import {
     getLedgerCategory,
     getAllLedgerCategories,
 } from '../constants/ledgerCategories'
-import type { LedgerExpense } from '../types/ledger'
+import type { LedgerExpense, LedgerEntryKind } from '../types/ledger'
+
+export const entryKind = (e: LedgerExpense): LedgerEntryKind =>
+    e.kind === 'income' ? 'income' : 'expense'
 
 export type CategoryAggregate = {
     categoryKey: string
@@ -31,25 +34,59 @@ const sortByDateDesc = (a: LedgerExpense, b: LedgerExpense) =>
     b.createdAt.localeCompare(a.createdAt)
 
 export function useLedger() {
-    const monthKey = dayjs().format('YYYY-MM')
+    const [viewMonthKey, setViewMonthKey] = useState(() =>
+        dayjs().format('YYYY-MM')
+    )
     const [tick, setTick] = useState(0)
 
     const refresh = useCallback(() => setTick(t => t + 1), [])
 
-    const expensesThisMonth = useMemo(() => {
+    const entriesThisMonth = useMemo(() => {
         const all = getAllLedgerExpenses()
-        return filterExpensesByMonth(all, monthKey).sort(sortByDateDesc)
-    }, [monthKey, tick])
+        return filterExpensesByMonth(all, viewMonthKey).sort(sortByDateDesc)
+    }, [viewMonthKey, tick])
 
-    const budget = useMemo(() => getMonthBudget(monthKey), [monthKey, tick])
+    const expenseRows = useMemo(
+        () => entriesThisMonth.filter(e => entryKind(e) === 'expense'),
+        [entriesThisMonth]
+    )
+
+    const dailyExpense = useMemo(() => {
+        const map: Record<string, number> = {}
+        for (const e of expenseRows) {
+            const d = dayjs(e.createdAt).format('YYYY-MM-DD')
+            map[d] = (map[d] ?? 0) + e.amount
+        }
+        return map
+    }, [expenseRows])
+
+    const dailyIncome = useMemo(() => {
+        const map: Record<string, number> = {}
+        for (const e of entriesThisMonth) {
+            if (entryKind(e) !== 'income') continue
+            const d = dayjs(e.createdAt).format('YYYY-MM-DD')
+            map[d] = (map[d] ?? 0) + e.amount
+        }
+        return map
+    }, [entriesThisMonth])
+
+    const budget = useMemo(() => getMonthBudget(viewMonthKey), [viewMonthKey, tick])
 
     const allCategories = useMemo(() => getAllLedgerCategories(), [tick])
 
     const customCategories = useMemo(() => getCustomLedgerCategories(), [tick])
 
     const totalSpent = useMemo(
-        () => expensesThisMonth.reduce((s, e) => s + e.amount, 0),
-        [expensesThisMonth]
+        () => expenseRows.reduce((s, e) => s + e.amount, 0),
+        [expenseRows]
+    )
+
+    const totalIncome = useMemo(
+        () =>
+            entriesThisMonth
+                .filter(e => entryKind(e) === 'income')
+                .reduce((s, e) => s + e.amount, 0),
+        [entriesThisMonth]
     )
 
     const spentPercent =
@@ -58,7 +95,7 @@ export function useLedger() {
 
     const categoryAggregates: CategoryAggregate[] = useMemo(() => {
         const map = new Map<string, LedgerExpense[]>()
-        for (const e of expensesThisMonth) {
+        for (const e of expenseRows) {
             const list = map.get(e.categoryKey) ?? []
             list.push(e)
             map.set(e.categoryKey, list)
@@ -78,14 +115,14 @@ export function useLedger() {
                 }
             })
             .sort((a, b) => b.total - a.total)
-    }, [expensesThisMonth, totalSpent])
+    }, [expenseRows, totalSpent])
 
     const updateBudget = useCallback(
         (amount: number) => {
-            setMonthBudget(monthKey, amount)
+            setMonthBudget(viewMonthKey, amount)
             refresh()
         },
-        [monthKey, refresh]
+        [viewMonthKey, refresh]
     )
 
     const appendExpense = useCallback(
@@ -93,6 +130,7 @@ export function useLedger() {
             amount: number
             categoryKey: string
             memo: string
+            kind: LedgerEntryKind
         }) => {
             const row: LedgerExpense = {
                 id: String(uuid.v4()),
@@ -100,6 +138,7 @@ export function useLedger() {
                 categoryKey: input.categoryKey,
                 memo: input.memo.trim(),
                 createdAt: dayjs().toISOString(),
+                kind: input.kind,
             }
             if (row.amount <= 0) return
             addLedgerExpense(row)
@@ -130,15 +169,23 @@ export function useLedger() {
         refresh()
     }, [refresh])
 
-    const monthLabel = useMemo(() => dayjs(monthKey + '-01').format('YYYY년 M월'), [monthKey])
+    const monthLabel = useMemo(
+        () => dayjs(viewMonthKey + '-01').format('YYYY년 M월'),
+        [viewMonthKey]
+    )
 
     return {
-        monthKey,
+        viewMonthKey,
+        setViewMonthKey,
         monthLabel,
         budget,
         totalSpent,
         spentPercent,
         displayPercent,
+        dailyExpense,
+        dailyIncome,
+        totalIncome,
+        entriesThisMonth,
         categoryAggregates,
         allCategories,
         customCategories,
