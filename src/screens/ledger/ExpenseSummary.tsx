@@ -19,12 +19,14 @@ import {
     BORDER,
     TRACK_BG,
     SCRIM,
+    LEDGER_ROW_INCOME,
 } from '../../constants/appColors'
 
 type Props = {
     monthLabel: string
     budget: number
     totalSpent: number
+    totalIncome: number
     spentPercent: number
     displayPercent: number
     onSaveBudget: (amount: number) => void
@@ -34,6 +36,7 @@ const ExpenseSummary = ({
     monthLabel,
     budget,
     totalSpent,
+    totalIncome,
     spentPercent,
     displayPercent,
     onSaveBudget,
@@ -75,8 +78,17 @@ const ExpenseSummary = ({
                 </Text>
             </View>
 
-            <Text style={styles.spentLabel}>지출 합계</Text>
-            <Text style={styles.spentBig}>{totalSpent.toLocaleString()}원</Text>
+            <Text style={styles.spentLabel}>수입 합계</Text>
+            <Text style={styles.incomeBig}>
+                {totalIncome > 0
+                    ? `+${totalIncome.toLocaleString()}원`
+                    : '0원'}
+            </Text>
+
+            <Text style={[styles.spentLabel, styles.spentLabelSp]}>지출 합계</Text>
+            <Text style={styles.spentBig}>
+                {totalSpent.toLocaleString()}원
+            </Text>
 
             {budget > 0 ? (
                 <>
@@ -218,6 +230,15 @@ const styles = StyleSheet.create({
     spentLabel: {
         fontSize: 13,
         color: INK_MUTED,
+    },
+    spentLabelSp: {
+        marginTop: 14,
+    },
+    incomeBig: {
+        fontSize: 22,
+        fontWeight: '800',
+        color: LEDGER_ROW_INCOME,
+        marginTop: 4,
     },
     spentBig: {
         fontSize: 28,

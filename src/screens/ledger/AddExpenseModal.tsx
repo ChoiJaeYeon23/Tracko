@@ -12,7 +12,11 @@ import {
     Platform,
     Keyboard,
 } from 'react-native'
-import type { LedgerCategoryDef } from '../../constants/ledgerCategories'
+import {
+    getIncomeLedgerCategories,
+    type LedgerCategoryDef,
+} from '../../constants/ledgerCategories'
+import type { LedgerEntryKind } from '../../types/ledger'
 import { PASTEL_RAINBOW } from '../../constants/categoryPastels'
 import {
     CREAM,
@@ -33,6 +37,7 @@ type Props = {
         amount: number
         categoryKey: string
         memo: string
+        kind: LedgerEntryKind
     }) => void
     onAddCategory: (label: string, color: string) => string | null
 }
@@ -47,6 +52,7 @@ const AddExpenseModal = ({
     const [amount, setAmount] = useState('')
     const [memo, setMemo] = useState('')
     const [categoryKey, setCategoryKey] = useState(categories[0]?.key ?? 'food')
+    const [entryKind, setEntryKind] = useState<LedgerEntryKind>('expense')
     const [addCatOpen, setAddCatOpen] = useState(false)
     const [newCatLabel, setNewCatLabel] = useState('')
     const [newCatColor, setNewCatColor] = useState<string>(PASTEL_RAINBOW[0])
@@ -55,6 +61,7 @@ const AddExpenseModal = ({
         if (visible) {
             setAmount('')
             setMemo('')
+            setEntryKind('expense')
             const first = categories[0]?.key ?? 'food'
             setCategoryKey(first)
         } else {
@@ -62,18 +69,21 @@ const AddExpenseModal = ({
         }
     }, [visible, categories])
 
+    const chipCategories: LedgerCategoryDef[] =
+        entryKind === 'income' ? getIncomeLedgerCategories() : categories
+
     useEffect(() => {
-        if (!visible || categories.length === 0) return
-        const keys = new Set(categories.map(c => c.key))
+        if (!visible || chipCategories.length === 0) return
+        const keys = new Set(chipCategories.map(c => c.key))
         if (!keys.has(categoryKey)) {
-            setCategoryKey(categories[0].key)
+            setCategoryKey(chipCategories[0].key)
         }
-    }, [visible, categories, categoryKey])
+    }, [visible, chipCategories, categoryKey, entryKind])
 
     const save = () => {
         const n = Number(String(amount).replace(/[^0-9]/g, ''))
         if (n <= 0) return
-        onSubmit({ amount: n, categoryKey, memo })
+        onSubmit({ amount: n, categoryKey, memo, kind: entryKind })
         Keyboard.dismiss()
         onClose()
     }
@@ -103,7 +113,39 @@ const AddExpenseModal = ({
                 <Pressable style={styles.backdrop} onPress={onClose} />
                 <View style={styles.sheet}>
                     <View style={styles.grab} />
-                    <Text style={styles.title}>지출 추가</Text>
+                    <Text style={styles.title}>내역 추가</Text>
+
+                    <View style={styles.kindRow}>
+                        {(['expense', 'income'] as const).map(k => {
+                            const sel = entryKind === k
+                            return (
+                                <TouchableOpacity
+                                    key={k}
+                                    onPress={() => {
+                                        setEntryKind(k)
+                                        const next =
+                                            k === 'income'
+                                                ? getIncomeLedgerCategories()
+                                                : categories
+                                        setCategoryKey(next[0]?.key ?? 'food')
+                                    }}
+                                    style={[
+                                        styles.kindChip,
+                                        sel && styles.kindChipOn,
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.kindChipTxt,
+                                            sel && styles.kindChipTxtOn,
+                                        ]}
+                                    >
+                                        {k === 'expense' ? '지출' : '수입'}
+                                    </Text>
+                                </TouchableOpacity>
+                            )
+                        })}
+                    </View>
 
                     <Text style={styles.label}>금액 (원)</Text>
                     <TextInput
@@ -119,19 +161,23 @@ const AddExpenseModal = ({
                         <Text style={[styles.label, styles.labelSpNone]}>
                             카테고리
                         </Text>
-                        <TouchableOpacity
-                            onPress={() => setAddCatOpen(true)}
-                            style={styles.addCatBtn}
-                        >
-                            <Text style={styles.addCatBtnTxt}>+ 직접 추가</Text>
-                        </TouchableOpacity>
+                        {entryKind === 'expense' ? (
+                            <TouchableOpacity
+                                onPress={() => setAddCatOpen(true)}
+                                style={styles.addCatBtn}
+                            >
+                                <Text style={styles.addCatBtnTxt}>+ 직접 추가</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <View style={styles.addCatPlaceholder} />
+                        )}
                     </View>
                     <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={styles.chips}
                     >
-                        {categories.map(c => {
+                        {chipCategories.map(c => {
                             const sel = c.key === categoryKey
                             return (
                                 <TouchableOpacity
@@ -169,7 +215,11 @@ const AddExpenseModal = ({
                     <TextInput
                         value={memo}
                         onChangeText={setMemo}
-                        placeholder="어디에 썼는지 짧게"
+                        placeholder={
+                            entryKind === 'expense'
+                                ? '어디에 썼는지 짧게'
+                                : '메모 (선택)'
+                        }
                         placeholderTextColor={PLACEHOLDER}
                         style={styles.input}
                     />
@@ -287,7 +337,40 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '800',
         color: INK,
-        marginBottom: 18,
+        marginBottom: 12,
+    },
+    kindRow: {
+        flexDirection: 'row',
+        marginBottom: 16,
+        backgroundColor: CREAM,
+        borderRadius: 12,
+        padding: 4,
+        borderWidth: 1,
+        borderColor: BORDER,
+    },
+    kindChip: {
+        flex: 1,
+        paddingVertical: 10,
+        alignItems: 'center',
+        borderRadius: 10,
+    },
+    kindChipOn: {
+        backgroundColor: WHITE,
+        borderWidth: 1,
+        borderColor: BORDER,
+    },
+    kindChipTxt: {
+        fontSize: 15,
+        fontWeight: '600',
+        color: INK_MUTED,
+    },
+    kindChipTxtOn: {
+        color: INK,
+        fontWeight: '700',
+    },
+    addCatPlaceholder: {
+        width: 88,
+        height: 32,
     },
     label: {
         fontSize: 13,
