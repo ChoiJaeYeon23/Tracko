@@ -1,49 +1,105 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import {
     SafeAreaView,
     View,
-    TouchableOpacity,
-    Switch
+    ScrollView,
+    StyleSheet,
+    RefreshControl,
 } from 'react-native'
-import { Typography } from '../../components'
-import { Header } from '../../components'
-import { CREAM, WHITE, INK, INK_MUTED, BORDER } from '../../constants/appColors'
+
+import {
+    Header,
+    Typography,
+    DashboardCard,
+    DashboardStatRow,
+    SettingsSwitchRow,
+} from '../../components'
+import { CREAM, INK } from '../../constants/appColors'
+import { APP_NAME, APP_VERSION } from '../../constants/appInfo'
 
 const SettingScreen = () => {
-    const [isNotificationEnabled, setIsNotificationEnabled] = useState<boolean>(false)
+    const [isNotificationEnabled, setIsNotificationEnabled] =
+        useState<boolean>(false)
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false)
+    const [refreshing, setRefreshing] = useState(false)
 
-    const toggleNotification = () => {
-        setIsNotificationEnabled(prev => !prev)
-    }
-
-    const toggleTheme = () => {
-        setIsDarkMode(prev => !prev)
-    }
+    const onRefresh = useCallback(() => {
+        setRefreshing(true)
+        setTimeout(() => setRefreshing(false), 280)
+    }, [])
 
     return (
-        <View style={{ flex: 1, backgroundColor: CREAM }}>
-            <Header 
-                title="설정"
-                showBackButton={false}
-            />
-            <SafeAreaView style={{ flex: 1, padding: 20 }}>
-                <View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                        <Typography variant="bodyLgSemi" style={{ color: INK }}>
-                            알림 설정
-                        </Typography>
-                        <Switch
-                            value={isNotificationEnabled}
-                            onValueChange={toggleNotification}
-                            trackColor={{ false: BORDER, true: INK_MUTED }}
-                            thumbColor={WHITE}
+        <View style={styles.root}>
+            <Header title="설정" showBackButton={false} />
+            <SafeAreaView style={styles.safe}>
+                <ScrollView
+                    style={styles.scroll}
+                    contentContainerStyle={styles.scrollContent}
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                            tintColor={INK}
                         />
-                    </View>
-                </View>
+                    }
+                >
+                    <Typography variant="bodySm" style={styles.lead}>
+                        알림과 화면 옵션을 정리할 수 있어요.
+                    </Typography>
+
+                    <DashboardCard title="알림">
+                        <SettingsSwitchRow
+                            label="푸시 알림"
+                            description="루틴·투두 알림 등(추후 연동)"
+                            value={isNotificationEnabled}
+                            onValueChange={setIsNotificationEnabled}
+                        />
+                    </DashboardCard>
+
+                    <DashboardCard title="화면">
+                        <SettingsSwitchRow
+                            label="다크 모드"
+                            description="앱 전체 어두운 테마(준비 중)"
+                            value={isDarkMode}
+                            onValueChange={setIsDarkMode}
+                            disabled
+                        />
+                    </DashboardCard>
+
+                    <DashboardCard title="앱 정보">
+                        <DashboardStatRow label="이름" value={APP_NAME} />
+                        <DashboardStatRow label="버전" value={APP_VERSION} />
+                    </DashboardCard>
+                </ScrollView>
             </SafeAreaView>
         </View>
     )
 }
 
 export default SettingScreen
+
+const styles = StyleSheet.create({
+    root: {
+        flex: 1,
+        backgroundColor: CREAM,
+    },
+    safe: {
+        flex: 1,
+    },
+    scroll: {
+        flex: 1,
+    },
+    scrollContent: {
+        paddingHorizontal: 16,
+        paddingTop: 8,
+        paddingBottom: 32,
+    },
+    lead: {
+        color: INK,
+        opacity: 0.55,
+        marginBottom: 16,
+        lineHeight: 20,
+    },
+})

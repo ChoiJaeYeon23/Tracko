@@ -1,4 +1,7 @@
 export { default as TimePicker } from './TimePicker'
 export { default as Header } from './Header'
 export { default as Typography } from './Typography'
+export { default as DashboardCard } from './DashboardCard'
+export { default as DashboardStatRow } from './DashboardStatRow'
+export { default as SettingsSwitchRow } from './SettingsSwitchRow'
 export type { TypographyVariant } from '../theme/typography'
