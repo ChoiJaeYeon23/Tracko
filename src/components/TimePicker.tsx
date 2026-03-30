@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
+import Typography from './Typography'
 import WheelPicker from '@quidone/react-native-wheel-picker'
 
 type TimePickerProps = {
@@ -39,7 +40,9 @@ const TimePicker = ({ onTimeChange }: TimePickerProps) => {
         value={hour}
         onValueChanged={onHourChanged}
       />
-      <Text style={styles.separator}>시</Text>
+      <Typography variant="title" style={styles.separator}>
+        시
+      </Typography>
 
       {/* 분 */}
       <WheelPicker
@@ -48,7 +51,9 @@ const TimePicker = ({ onTimeChange }: TimePickerProps) => {
         value={minute}
         onValueChanged={onMinuteChanged}
       />
-      <Text style={styles.separator}>분</Text>
+      <Typography variant="title" style={styles.separator}>
+        분
+      </Typography>
 
       {/* AM/PM */}
       <WheelPicker
@@ -72,7 +77,6 @@ const styles = StyleSheet.create({
     height: 150,
   },
   separator: {
-    fontSize: 18,
     paddingHorizontal: 6,
     color: '#333',
   },

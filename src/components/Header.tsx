@@ -1,11 +1,11 @@
 import React from 'react'
 import {
     View,
-    Text,
     TouchableOpacity,
     StyleSheet,
     SafeAreaView,
 } from 'react-native'
+import Typography from './Typography'
 import { useNavigation } from '@react-navigation/native'
 import { CREAM, WHITE, INK, BORDER } from '../constants/appColors'
 
@@ -39,13 +39,17 @@ const Header: React.FC<HeaderProps> = ({
                             onPress={handleBackPress}
                             style={styles.backButton}
                         >
-                            <Text style={styles.backButtonText}>←</Text>
+                            <Typography variant="titleBold" style={styles.backButtonText}>
+                                ←
+                            </Typography>
                         </TouchableOpacity>
                     )}
                 </View>
 
                 <View style={styles.centerSection}>
-                    <Text style={styles.title}>{title}</Text>
+                    <Typography variant="titleBold" style={styles.title}>
+                        {title}
+                    </Typography>
                 </View>
 
                 <View style={styles.rightSection} />
@@ -95,13 +99,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     backButtonText: {
-        fontSize: 18,
-        fontWeight: 'bold',
         color: INK,
     },
     title: {
-        fontSize: 18,
-        fontWeight: '700',
         color: INK,
         textAlign: 'center',
     },

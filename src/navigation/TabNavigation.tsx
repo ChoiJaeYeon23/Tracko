@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { CREAM, WHITE, INK, INK_MUTED } from '../constants/appColors'
+import { typography } from '../theme/typography'
 import {
     AnalysisScreen,
     HomeScreen,
@@ -29,10 +30,7 @@ const TabNavigation = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                 },
-                tabBarLabelStyle: {
-                    fontSize: 10,
-                    fontWeight: '600',
-                },
+                tabBarLabelStyle: typography.tabLabel,
             }}
         >
             <BottomTab.Screen
