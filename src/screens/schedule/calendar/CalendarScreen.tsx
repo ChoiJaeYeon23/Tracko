@@ -8,18 +8,22 @@ import { CREAM, WHITE, INK, INK_MUTED } from '../../../constants/appColors'
 import { useState, useEffect } from 'react'
 import { getAllRoutines, getAllTodos, getAllEvents } from '../../../database'
 
-const CalendarScreen = (
-    { selectedDate, onDateChange }: {
-        selectedDate: string
-        onDateChange: (date: string) => void
-    }
-) => {
+const CalendarScreen = ({
+    selectedDate,
+    onDateChange,
+    calendarJumpKey = 0,
+}: {
+    selectedDate: string
+    onDateChange: (date: string) => void
+    /** 부모가 새로고침 등으로 올릴 때마다 표시 월을 selectedDate(보통 오늘)에 맞춤 */
+    calendarJumpKey?: number
+}) => {
     const [currentDate, setCurrentDate] = useState(dayjs())
 
-    // selectedDate가 변경될 때 currentDate 동기화
+    // selectedDate 또는 강제 점프 시 표시 월 동기화 (월 화살표만 바꾼 뒤엔 selectedDate와 달이 달라질 수 있음)
     useEffect(() => {
         setCurrentDate(dayjs(selectedDate))
-    }, [selectedDate])
+    }, [selectedDate, calendarJumpKey])
 
     // 실제 데이터베이스에서 데이터 가져오기
     const [routines, setRoutines] = useState<any[]>([])
@@ -190,10 +194,12 @@ for (let i = 1; i <= daysInMonth; i++) {
         return date.format('YYYY-MM-DD') === selectedDate
     }
 
+    const weekCount = Math.ceil(dates.length / 7)
+
     return (
-        <View style={{ flex: 1, padding: 16, backgroundColor: CREAM }}>
-            {/* 월 이동 헤더 */}
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+        <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 12, paddingBottom: 8, backgroundColor: CREAM }}>
+            {/* 월 이동 헤더 — 스크롤 없음, 상단 패널 높이 안에서만 배치 */}
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                 <TouchableOpacity 
                     onPress={() => handleMonthChange('prev')}
                     style={{ padding: 12, minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }}
@@ -210,20 +216,27 @@ for (let i = 1; i <= daysInMonth; i++) {
             </View>
 
             {/* 요일 헤더 */}
-            <View style={{ flexDirection: 'row', marginBottom: 8 }}>
+            <View style={{ flexDirection: 'row', marginBottom: 6 }}>
                 {['일', '월', '화', '수', '목', '금', '토'].map((d) => (
                     <View key={d} style={{ flex: 1, alignItems: 'center' }}>
-                        <Text style={{ fontSize: 14, fontWeight: '600', color: INK_MUTED }}>
+                        <Text style={{ fontSize: 13, fontWeight: '600', color: INK_MUTED }}>
                             {d}
                         </Text>
                     </View>
                 ))}
             </View>
 
-            {/* 날짜 셀 */}
-            <View style={{ flex: 1, maxHeight: 300 }}>
-                {Array.from({ length: Math.ceil(dates.length / 7) }, (_, weekIndex) => (
-                    <View key={weekIndex} style={{ flexDirection: 'row' }}>
+            {/* 날짜 격자: 주 단위로 flex 분배해 패널 높이에 맞춤 (내부 스크롤 없음) */}
+            <View style={{ flex: 1, minHeight: 0 }}>
+                {Array.from({ length: weekCount }, (_, weekIndex) => (
+                    <View
+                        key={weekIndex}
+                        style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            minHeight: 0,
+                        }}
+                    >
                         {dates.slice(weekIndex * 7, (weekIndex + 1) * 7).map((date, dayIndex) => {
                             if (!date) {
                                 return <View key={dayIndex} style={{ flex: 1 }} />
@@ -240,17 +253,18 @@ for (let i = 1; i <= daysInMonth; i++) {
                                         flex: 1,
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        paddingVertical: 4,
+                                        minWidth: 0,
                                     }}
                                 >
                                     <View style={{
-                                        width: 32, height: 32,
-                                        borderRadius: 16,
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 15,
                                         backgroundColor: selected ? WHITE : 'transparent',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                     }}>
-                                        <Text style={{ fontSize: 14, color: selected ? INK : INK_MUTED }}>
+                                        <Text style={{ fontSize: 13, color: selected ? INK : INK_MUTED, fontWeight: selected ? '700' : '600' }}>
                                             {date.date()}
                                         </Text>
                                     </View>

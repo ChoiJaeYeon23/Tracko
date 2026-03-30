@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import {
     SafeAreaView,
     View,
-    Dimensions
+    Dimensions,
+    ScrollView,
+    RefreshControl,
 } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { TabView, TabBar } from 'react-native-tab-view'
@@ -30,6 +32,18 @@ const ScheduleScreen = ({ navigation }: Props) => {
         { key: 'event', title: '일정' }
     ])
     const [selectedDate, setSelectedDate] = useState<string>(dayjs().format('YYYY-MM-DD'))
+    const [refreshing, setRefreshing] = useState(false)
+    /** 달 표시 월을 강제로 맞출 때(새로고침 등). selectedDate만으로는 월 화살표만 바꾼 상태와 어긋날 수 있음 */
+    const [calendarJumpKey, setCalendarJumpKey] = useState(0)
+
+    /** 당겨서 새로고침: 오늘 날짜·오늘이 속한 달 달력으로 이동 */
+    const onScheduleRefresh = useCallback(() => {
+        setRefreshing(true)
+        const today = dayjs().format('YYYY-MM-DD')
+        setSelectedDate(today)
+        setCalendarJumpKey(k => k + 1)
+        setTimeout(() => setRefreshing(false), 350)
+    }, [])
 
     const renderScene = ({ route }: { route: { key: string } }) => {
         switch (route.key) {
@@ -85,14 +99,30 @@ const ScheduleScreen = ({ navigation }: Props) => {
             />
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={{ flex: 0.7, backgroundColor: CREAM }}>
-                    <CalendarScreen
-                        selectedDate={selectedDate}
-                        onDateChange={setSelectedDate}
-                    />
+                    <ScrollView
+                        style={{ flex: 1 }}
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        showsVerticalScrollIndicator={false}
+                        keyboardShouldPersistTaps="handled"
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onScheduleRefresh}
+                                tintColor={INK}
+                            />
+                        }
+                    >
+                        <CalendarScreen
+                            selectedDate={selectedDate}
+                            onDateChange={setSelectedDate}
+                            calendarJumpKey={calendarJumpKey}
+                        />
+                    </ScrollView>
                 </View>
                 <View style={{ flex: 0.4, backgroundColor: WHITE }}>
                     <TabView
                         key={selectedDate}
+                        style={{ flex: 1 }}
                         navigationState={{ index, routes }}
                         renderScene={renderScene}
                         onIndexChange={setIndex}
