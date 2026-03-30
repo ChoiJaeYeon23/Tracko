@@ -1,9 +1,10 @@
 import {
     SafeAreaView,
     View,
-    Text,
-    Button
+    Button,
+    Alert,
 } from 'react-native'
+import { Typography } from '../../components'
 import {
     eventStorage, routineStorage, todoStorage,
     getAllEvents, getAllRoutines, getAllTodos, getRoutineCompletionMap
@@ -16,14 +17,14 @@ const HomeScreen = () => {
 
     const printAllStorageData = () => {
         const routines = getAllRoutines()
-        const routineMap = getRoutineCompletionMap()
+        const map = getRoutineCompletionMap()
         const todos = getAllTodos()
         const events = getAllEvents()
-
-        console.log('🔁 [Routines]:', routines)
-        console.log('🗺️ [RoutineCompletionMap]:', routineMap)
-        console.log('✅ [Todos]:', todos)
-        console.log('📅 [Events]:', events)
+        const doneDays = Object.keys(map).length
+        Alert.alert(
+            '저장소 요약',
+            `루틴 ${routines.length} · 투두 ${todos.length} · 일정 ${events.length} · 완료기록일 ${doneDays}`,
+        )
     }
 
     const deleteAllStorage = () => {
@@ -52,11 +53,11 @@ const HomeScreen = () => {
             />
             <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
                 <View style={{ flex: 1, alignItems: 'center' }}>
-                    <Text>HomeScreen Hi ~</Text>
+                    <Typography variant="bodyLg">HomeScreen Hi ~</Typography>
                 </View>
 
                 <View style={{ flex: 1, alignItems: 'center' }}>
-                    <Text>Schedule 관련 버튼입니다</Text>
+                    <Typography variant="bodyLg">Schedule 관련 버튼입니다</Typography>
                     <Button
                         title='전체출력'
                         onPress={printAllStorageData}

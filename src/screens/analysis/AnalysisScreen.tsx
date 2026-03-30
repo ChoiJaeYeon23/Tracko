@@ -1,4 +1,5 @@
-import { View, Text, SafeAreaView } from 'react-native'
+import { View, SafeAreaView } from 'react-native'
+import { Typography } from '../../components'
 import { Header } from '../../components'
 import { CREAM, INK } from '../../constants/appColors'
 
@@ -10,7 +11,9 @@ const AnalysisScreen = () => {
                 showBackButton={false}
             />
             <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ color: INK }}>분석 화면</Text>
+                <Typography variant="bodyLg" style={{ color: INK }}>
+                    분석 화면
+                </Typography>
             </SafeAreaView>
         </View>
     )

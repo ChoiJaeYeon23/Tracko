@@ -2,10 +2,10 @@ import { useState } from 'react'
 import {
     SafeAreaView,
     View,
-    Text,
     TouchableOpacity,
     Switch
 } from 'react-native'
+import { Typography } from '../../components'
 import { Header } from '../../components'
 import { CREAM, WHITE, INK, INK_MUTED, BORDER } from '../../constants/appColors'
 
@@ -30,7 +30,9 @@ const SettingScreen = () => {
             <SafeAreaView style={{ flex: 1, padding: 20 }}>
                 <View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                        <Text style={{ fontSize: 16, fontWeight: '600', color: INK }}>알림 설정</Text>
+                        <Typography variant="bodyLgSemi" style={{ color: INK }}>
+                            알림 설정
+                        </Typography>
                         <Switch
                             value={isNotificationEnabled}
                             onValueChange={toggleNotification}
