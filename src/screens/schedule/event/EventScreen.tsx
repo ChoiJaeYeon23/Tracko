@@ -113,6 +113,7 @@ const EventScreen = (
             <SectionList
                 sections={sections}
                 keyExtractor={(item) => item.id}
+                contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
                 renderSectionHeader={({ section: { title } }) => (
                     <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 8, backgroundColor: CREAM, color: INK, paddingVertical: 6, paddingHorizontal: 4, borderRadius: 6 }}>
                         {title}

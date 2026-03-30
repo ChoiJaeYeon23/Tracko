@@ -139,6 +139,7 @@ const TodoScreen = (
                 data={filteredTodos}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
+                contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
             />
         </View>
     )
