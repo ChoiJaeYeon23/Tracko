@@ -17,9 +17,7 @@ import {
     getAllLedgerCategories,
 } from '../constants/ledgerCategories'
 import type { LedgerExpense, LedgerEntryKind } from '../types/ledger'
-
-export const entryKind = (e: LedgerExpense): LedgerEntryKind =>
-    e.kind === 'income' ? 'income' : 'expense'
+import { ledgerEntryKind } from '../utils/ledgerEntryKind'
 
 export type CategoryAggregate = {
     categoryKey: string
@@ -47,7 +45,7 @@ export function useLedger() {
     }, [viewMonthKey, tick])
 
     const expenseRows = useMemo(
-        () => entriesThisMonth.filter(e => entryKind(e) === 'expense'),
+        () => entriesThisMonth.filter(e => ledgerEntryKind(e) === 'expense'),
         [entriesThisMonth]
     )
 
@@ -63,7 +61,7 @@ export function useLedger() {
     const dailyIncome = useMemo(() => {
         const map: Record<string, number> = {}
         for (const e of entriesThisMonth) {
-            if (entryKind(e) !== 'income') continue
+            if (ledgerEntryKind(e) !== 'income') continue
             const d = dayjs(e.createdAt).format('YYYY-MM-DD')
             map[d] = (map[d] ?? 0) + e.amount
         }
@@ -84,7 +82,7 @@ export function useLedger() {
     const totalIncome = useMemo(
         () =>
             entriesThisMonth
-                .filter(e => entryKind(e) === 'income')
+                .filter(e => ledgerEntryKind(e) === 'income')
                 .reduce((s, e) => s + e.amount, 0),
         [entriesThisMonth]
     )
