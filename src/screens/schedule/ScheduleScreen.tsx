@@ -19,6 +19,7 @@ import {
 import { ScheduleStackParamList } from '../../navigation/ScheduleStackNavigator'
 import { Header } from '../../components'
 import { CREAM, WHITE, INK, INK_MUTED, BORDER } from '../../constants/appColors'
+import { typography } from '../../theme/typography'
 
 const initialLayout = { width: Dimensions.get('window').width }
 
@@ -71,7 +72,7 @@ const ScheduleScreen = ({ navigation }: Props) => {
             }}
             activeColor={INK}
             inactiveColor={INK_MUTED}
-            labelStyle={{ fontWeight: '600' }}
+            labelStyle={typography.scheduleTabLabel}
         />
     )
 

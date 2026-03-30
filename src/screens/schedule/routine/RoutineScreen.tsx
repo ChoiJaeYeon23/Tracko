@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import {
     View,
-    Text,
     FlatList,
     TouchableOpacity,
     Alert,
 } from 'react-native'
+import { Typography } from '../../../components'
 import { useFocusEffect } from '@react-navigation/native'
 import dayjs from 'dayjs'
 import {
@@ -32,11 +32,6 @@ const RoutineScreen = (
             const completionStorage = await getRoutineCompletionMap()
             setRoutines(routinesStorage)
             setCompletionMap(completionStorage)
-
-            console.log('[RoutineScreen][Success] 루틴 불러오기 성공')
-            console.log('[RoutineScreen] selectedDate:', selectedDate)
-            console.log('[RoutineScreen] selectedDay:', selectedDay)
-            console.log('[RoutineScreen] routinesStorage:', routinesStorage)
         } catch (error) {
             console.error('[RoutineScreen][Failed] 루틴 불러오기 실패')
             Alert.alert('루틴을 불러오지 못했습니다')
@@ -58,10 +53,6 @@ const RoutineScreen = (
         routine.daysOfWeek.includes(selectedDay)
     )
 
-    console.log('[RoutineScreen] selectedRoutines:', selectedRoutines)
-    console.log('[RoutineScreen] routines.length:', routines.length)
-    console.log('[RoutineScreen] selectedRoutines.length:', selectedRoutines.length)
-
     const isRoutineCompleted = (id: string): boolean => {
         return completionMap[dateKey]?.includes(id) ?? false
     }
@@ -81,7 +72,6 @@ const RoutineScreen = (
         try {
             await updateRoutineCompletionMap(updatedMap)
             setCompletionMap(updatedMap)
-            console.log('[RoutineScreen][Success] 완료 상태 업데이트 성공')
         } catch (error) {
             console.error('[RoutineScreen][Failed] 완료 상태 업데이트 실패:', error)
             Alert.alert('루틴 완료 상태 저장에 실패했습니다.')
@@ -130,18 +120,16 @@ const RoutineScreen = (
             justifyContent: 'space-between'
         }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-                <Text style={{ marginRight: 10, flex: 1 }}>
+                <Typography variant="bodyLg" style={{ marginRight: 10, flex: 1 }}>
                     {item.title} {item.time && item.time}
-                </Text>
-                <Text style={{ marginRight: 10, fontSize: 12, color: INK_MUTED }}>
+                </Typography>
+                <Typography variant="captionSemi" style={{ marginRight: 10, color: INK_MUTED }}>
                     {item.daysOfWeek.map((d) => ['일', '월', '화', '수', '목', '금', '토'][d]).join(', ')}
-                </Text>
+                </Typography>
                 <TouchableOpacity
                     onPress={() => toggleComplete(item.id)}
                 >
-                    <Text style={{ fontSize: 18 }}>
-                        {isRoutineCompleted(item.id) ? '☑' : '☐'}
-                    </Text>
+                    <Typography variant="title">{isRoutineCompleted(item.id) ? '☑' : '☐'}</Typography>
                 </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -154,7 +142,9 @@ const RoutineScreen = (
                     marginLeft: 10
                 }}
             >
-                <Text style={{ color: WHITE, fontSize: 12 }}>삭제</Text>
+                <Typography variant="captionSemi" style={{ color: WHITE }}>
+                    삭제
+                </Typography>
             </TouchableOpacity>
         </View>
     )
@@ -167,9 +157,9 @@ const RoutineScreen = (
                 renderItem={renderItem}
                 contentContainerStyle={{ paddingBottom: 100 }}
                 ListEmptyComponent={
-                    <Text style={{ marginTop: 20, textAlign: 'center' }}>
+                    <Typography variant="bodyLg" style={{ marginTop: 20, textAlign: 'center' }}>
                         오늘은 루틴이 없습니다.
-                    </Text>
+                    </Typography>
                 }
             />
         </View>

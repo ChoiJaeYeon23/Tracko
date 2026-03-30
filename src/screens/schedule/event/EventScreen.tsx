@@ -1,11 +1,11 @@
 import { useMemo, useState, useCallback, useEffect } from 'react'
 import {
     View,
-    Text,
     SectionList,
     TouchableOpacity,
     Alert
 } from 'react-native'
+import { Typography } from '../../../components'
 import { useFocusEffect } from '@react-navigation/native'
 import dayjs from 'dayjs'
 import { Event } from '../../../types'
@@ -17,7 +17,6 @@ const getWeekRange = (date: dayjs.Dayjs) => {
     const day = date.day() // 0(일) ~ 6(토)
     const monday = date.subtract(day === 0 ? 6 : day - 1, 'day') // 일요일이면 -6일, 그 외는 (요일-1)일 뺌
     const sunday = monday.add(6, 'day')
-    console.log('[getWeekRange] monday:', monday.format('YYYY-MM-DD'), ', sunday:', sunday.format('YYYY-MM-DD'))
     return { monday, sunday }
 }
 
@@ -31,7 +30,6 @@ const EventScreen = (
     const [weekEvents, setWeekEvents] = useState<Event[]>([])
 
     const fetchEvents = useCallback(() => {
-        console.log('[fetchEvents] 시작')
         const allEvents = getAllEvents()
 
         const filteredSelectedDay = allEvents.filter(event => {
@@ -106,8 +104,6 @@ const EventScreen = (
         },
     ].filter(section => section.data.length > 0)
 
-    console.log('[render] sections:', sections)
-
     return (
         <View style={{ padding: 10, flex: 1, backgroundColor: WHITE }}>
             <SectionList
@@ -115,14 +111,26 @@ const EventScreen = (
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
                 renderSectionHeader={({ section: { title } }) => (
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 8, backgroundColor: CREAM, color: INK, paddingVertical: 6, paddingHorizontal: 4, borderRadius: 6 }}>
+                    <Typography
+                        variant="titleBold"
+                        style={{
+                            marginBottom: 8,
+                            backgroundColor: CREAM,
+                            color: INK,
+                            paddingVertical: 6,
+                            paddingHorizontal: 4,
+                            borderRadius: 6,
+                        }}
+                    >
                         {title}
-                    </Text>
+                    </Typography>
                 )}
                 renderItem={({ item, section }) => {
                     if (section.isEmpty) {
                         return (
-                            <Text style={{ padding: 12, color: INK_MUTED }}>{item.title}</Text>
+                            <Typography variant="bodyLg" style={{ padding: 12, color: INK_MUTED }}>
+                                {item.title}
+                            </Typography>
                         )
                     }
 
@@ -139,9 +147,17 @@ const EventScreen = (
                             alignItems: 'center'
                         }}>
                             <View style={{ flex: 1 }}>
-                                <Text style={{ fontSize: 16, fontWeight: '600', color: INK }}>{item.title}</Text>
-                                <Text style={{ color: INK_MUTED }}>날짜: {dayjs(item.date).format('YYYY-MM-DD')}</Text>
-                                {item.location && <Text style={{ color: INK_MUTED }}>장소: {item.location}</Text>}
+                                <Typography variant="bodyLgSemi" style={{ color: INK }}>
+                                    {item.title}
+                                </Typography>
+                                <Typography variant="bodyLg" style={{ color: INK_MUTED }}>
+                                    날짜: {dayjs(item.date).format('YYYY-MM-DD')}
+                                </Typography>
+                                {item.location && (
+                                    <Typography variant="bodyLg" style={{ color: INK_MUTED }}>
+                                        장소: {item.location}
+                                    </Typography>
+                                )}
                             </View>
                             
                             <TouchableOpacity
@@ -154,7 +170,9 @@ const EventScreen = (
                                     marginLeft: 10
                                 }}
                             >
-                                <Text style={{ color: WHITE, fontSize: 12 }}>삭제</Text>
+                                <Typography variant="captionSemi" style={{ color: WHITE }}>
+                                    삭제
+                                </Typography>
                             </TouchableOpacity>
                         </View>
                     )

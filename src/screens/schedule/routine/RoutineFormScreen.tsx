@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import {
     View,
-    Text,
     TextInput,
     TouchableOpacity,
     Button,
@@ -17,7 +16,8 @@ import dayjs from 'dayjs'
 import uuid from 'react-native-uuid'
 import { addRoutine, updateRoutine } from '../../../database'
 import { Routine } from '../../../types'
-import { Header } from '../../../components'
+import { Header, Typography } from '../../../components'
+import { typography } from '../../../theme/typography'
 import {
     CREAM,
     WHITE,
@@ -99,10 +99,8 @@ const RoutineFormScreen = () => {
 
         try {
             if (mode === 'edit') {
-                console.log('수정할 루틴은:', newRoutine)
                 updateRoutine(newRoutine)
             } else {
-                console.log('추가할 루틴은:', newRoutine)
                 addRoutine(newRoutine)
             }
 
@@ -130,7 +128,9 @@ const RoutineFormScreen = () => {
                 <View style={styles.content}>
 
             <View style={styles.section}>
-                <Text style={styles.label}>루틴 제목</Text>
+                <Typography variant="bodyLgSemi" style={styles.label}>
+                    루틴 제목
+                </Typography>
                 <TextInput
                     value={title}
                     onChangeText={setTitle}
@@ -141,7 +141,9 @@ const RoutineFormScreen = () => {
             </View>
 
             <View style={styles.section}>
-                <Text style={styles.label}>요일 선택</Text>
+                <Typography variant="bodyLgSemi" style={styles.label}>
+                    요일 선택
+                </Typography>
                 <View style={styles.dayContainer}>
                     {daysKor.map((d, i) => (
                         <TouchableOpacity
@@ -152,19 +154,25 @@ const RoutineFormScreen = () => {
                                 daysOfWeek.includes(i) ? styles.dayButtonSelected : styles.dayButtonUnselected
                             ]}
                         >
-                            <Text style={[
-                                styles.dayButtonText,
-                                daysOfWeek.includes(i) ? styles.dayButtonTextSelected : styles.dayButtonTextUnselected
-                            ]}>
+                            <Typography
+                                variant="bodySemi"
+                                style={
+                                    daysOfWeek.includes(i)
+                                        ? styles.dayButtonTextSelected
+                                        : styles.dayButtonTextUnselected
+                                }
+                            >
                                 {d}
-                            </Text>
+                            </Typography>
                         </TouchableOpacity>
                     ))}
                 </View>
             </View>
 
             <View style={styles.section}>
-                <Text style={styles.label}>시간 선택 (선택)</Text>
+                <Typography variant="bodyLgSemi" style={styles.label}>
+                    시간 선택 (선택)
+                </Typography>
                 <TouchableOpacity
                     onPress={() => {
                         // 시간 선택기 열 때 적절한 초기값 설정
@@ -179,10 +187,12 @@ const RoutineFormScreen = () => {
                     }}
                     style={styles.timeButton}
                 >
-                    <Text style={styles.timeButtonText}>
+                    <Typography variant="bodyLgMedium" style={styles.timeButtonText}>
                         {time || '시간 선택하기'}
-                    </Text>
-                    <Text style={styles.timeButtonIcon}>⏰</Text>
+                    </Typography>
+                    <Typography variant="title" style={styles.timeButtonIcon}>
+                        ⏰
+                    </Typography>
                 </TouchableOpacity>
             </View>
 
@@ -195,9 +205,13 @@ const RoutineFormScreen = () => {
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContainer}>
                         <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>시간 선택</Text>
+                            <Typography variant="titleSemi" style={styles.modalTitle}>
+                                시간 선택
+                            </Typography>
                             <TouchableOpacity onPress={cancelTimeSelection} style={styles.closeButton}>
-                                <Text style={styles.closeButtonText}>✕</Text>
+                                <Typography variant="bodyLgSemi" style={styles.closeButtonText}>
+                                    ✕
+                                </Typography>
                             </TouchableOpacity>
                         </View>
                         
@@ -221,13 +235,17 @@ const RoutineFormScreen = () => {
                                 onPress={cancelTimeSelection}
                                 style={[styles.modalButton, styles.cancelButton]}
                             >
-                                <Text style={styles.cancelButtonText}>취소</Text>
+                                <Typography variant="bodyLgSemi" style={styles.cancelButtonText}>
+                                    취소
+                                </Typography>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={confirmTimeSelection}
                                 style={[styles.modalButton, styles.confirmButton]}
                             >
-                                <Text style={styles.confirmButtonText}>확인</Text>
+                                <Typography variant="bodyLgSemi" style={styles.confirmButtonText}>
+                                    확인
+                                </Typography>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -235,9 +253,9 @@ const RoutineFormScreen = () => {
             </Modal>
 
             <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                <Text style={styles.submitButtonText}>
+                <Typography variant="titleBold" style={styles.submitButtonText}>
                     {mode === 'edit' ? '수정하기' : '등록하기'}
-                </Text>
+                </Typography>
             </TouchableOpacity>
                 </View>
             </TouchableWithoutFeedback>
@@ -259,8 +277,6 @@ const styles = StyleSheet.create({
         marginBottom: 25,
     },
     label: {
-        fontSize: 16,
-        fontWeight: '600',
         color: INK,
         marginBottom: 10,
     },
@@ -270,7 +286,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 15,
         backgroundColor: WHITE,
-        fontSize: 16,
+        ...typography.input,
         color: INK,
         shadowColor: INK,
         shadowOffset: { width: 0, height: 1 },
@@ -299,10 +315,6 @@ const styles = StyleSheet.create({
         backgroundColor: WHITE,
         borderColor: BORDER,
     },
-    dayButtonText: {
-        fontSize: 14,
-        fontWeight: '600',
-    },
     dayButtonTextSelected: {
         color: WHITE,
     },
@@ -325,12 +337,9 @@ const styles = StyleSheet.create({
         elevation: 1,
     },
     timeButtonText: {
-        fontSize: 16,
         color: INK,
-        fontWeight: '500',
     },
     timeButtonIcon: {
-        fontSize: 18,
         color: INK_MUTED,
     },
     submitButton: {
@@ -346,8 +355,6 @@ const styles = StyleSheet.create({
     },
     submitButtonText: {
         color: WHITE,
-        fontSize: 18,
-        fontWeight: '700',
         textAlign: 'center',
     },
     // 모달 스타일
@@ -384,8 +391,6 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
     },
     modalTitle: {
-        fontSize: 18,
-        fontWeight: '600',
         color: INK,
     },
     closeButton: {
@@ -399,9 +404,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     closeButtonText: {
-        fontSize: 16,
         color: INK,
-        fontWeight: '600',
     },
     timePickerContainer: {
         padding: 20,
@@ -431,13 +434,9 @@ const styles = StyleSheet.create({
         backgroundColor: INK,
     },
     cancelButtonText: {
-        fontSize: 16,
-        fontWeight: '600',
         color: INK_MUTED,
     },
     confirmButtonText: {
-        fontSize: 16,
-        fontWeight: '600',
         color: WHITE,
     },
 })

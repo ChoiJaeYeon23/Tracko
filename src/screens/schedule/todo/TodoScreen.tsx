@@ -1,11 +1,11 @@
 import { useState, useCallback, useEffect } from 'react'
 import {
     View,
-    Text,
     FlatList,
     TouchableOpacity,
     Alert
 } from 'react-native'
+import { Typography } from '../../../components'
 import { useFocusEffect } from '@react-navigation/native'
 import { Todo } from '../../../types'
 import {
@@ -102,19 +102,20 @@ const TodoScreen = (
                     }}
                 >
                     {item.isCompleted && (
-                        <Text style={{ fontSize: 16 }}>✓</Text>
+                        <Typography variant="bodyLg">✓</Typography>
                     )}
                 </TouchableOpacity>
 
                 <View style={{ flex: 1 }}>
-                    <Text style={{ 
-                        fontSize: 16, 
-                        fontWeight: 'bold',
-                        textDecorationLine: item.isCompleted ? 'line-through' : 'none',
-                        color: item.isCompleted ? INK_MUTED : INK
-                    }}>
+                    <Typography
+                        variant="bodyLgBold"
+                        style={{
+                            textDecorationLine: item.isCompleted ? 'line-through' : 'none',
+                            color: item.isCompleted ? INK_MUTED : INK,
+                        }}
+                    >
                         {item.title}
-                    </Text>
+                    </Typography>
                 </View>
             </View>
             
@@ -128,7 +129,9 @@ const TodoScreen = (
                     marginLeft: 10
                 }}
             >
-                <Text style={{ color: WHITE, fontSize: 12 }}>삭제</Text>
+                <Typography variant="captionSemi" style={{ color: WHITE }}>
+                    삭제
+                </Typography>
             </TouchableOpacity>
         </View>
     )

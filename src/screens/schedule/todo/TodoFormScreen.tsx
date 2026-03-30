@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import {
     View,
-    Text,
     TextInput,
     TouchableOpacity,
     Alert,
@@ -19,7 +18,8 @@ import {
     addTodo,
     updateTodo
 } from '../../../database'
-import { Header } from '../../../components'
+import { Header, Typography } from '../../../components'
+import { typography } from '../../../theme/typography'
 import {
     CREAM,
     WHITE,
@@ -107,11 +107,9 @@ const TodoFormScreen = () => {
             if (mode === 'edit') {
                 await updateTodo(newTodo)
                 Alert.alert('투두를 성공적으로 저장했습니다.')
-                console.log('[TodoFormScreen][Success] 투두 저장 성공')
             } else {
                 await addTodo(newTodo)
                 Alert.alert('투두를 성공적으로 저장했습니다.')
-                console.log('[TodoFormScreen][Success] 투두 저장 성공')
             }
 
             navigation.goBack()
@@ -131,7 +129,9 @@ const TodoFormScreen = () => {
                 <View style={styles.content}>
 
                 <View style={styles.section}>
-                    <Text style={styles.label}>투두 제목</Text>
+                    <Typography variant="bodyLgSemi" style={styles.label}>
+                        투두 제목
+                    </Typography>
                     <TextInput
                         value={title}
                         onChangeText={setTitle}
@@ -142,7 +142,9 @@ const TodoFormScreen = () => {
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.label}>설명</Text>
+                    <Typography variant="bodyLgSemi" style={styles.label}>
+                        설명
+                    </Typography>
                     <TextInput
                         value={description}
                         onChangeText={setDescription}
@@ -155,7 +157,9 @@ const TodoFormScreen = () => {
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.label}>마감일</Text>
+                    <Typography variant="bodyLgSemi" style={styles.label}>
+                        마감일
+                    </Typography>
                     <TouchableOpacity
                         onPress={() => {
                             if (!tempDate) {
@@ -170,10 +174,12 @@ const TodoFormScreen = () => {
                         }}
                         style={styles.dateButton}
                     >
-                        <Text style={styles.dateButtonText}>
+                        <Typography variant="bodyLgMedium" style={styles.dateButtonText}>
                             {date || '날짜 선택하기'}
-                        </Text>
-                        <Text style={styles.dateButtonIcon}>📅</Text>
+                        </Typography>
+                        <Typography variant="title" style={styles.dateButtonIcon}>
+                            📅
+                        </Typography>
                     </TouchableOpacity>
                 </View>
 
@@ -186,9 +192,13 @@ const TodoFormScreen = () => {
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContainer}>
                         <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>날짜 선택</Text>
+                            <Typography variant="titleSemi" style={styles.modalTitle}>
+                                날짜 선택
+                            </Typography>
                             <TouchableOpacity onPress={cancelDateSelection} style={styles.closeButton}>
-                                <Text style={styles.closeButtonText}>✕</Text>
+                                <Typography variant="bodyLgSemi" style={styles.closeButtonText}>
+                                    ✕
+                                </Typography>
                             </TouchableOpacity>
                         </View>
                         
@@ -211,13 +221,17 @@ const TodoFormScreen = () => {
                                 onPress={cancelDateSelection}
                                 style={[styles.modalButton, styles.cancelButton]}
                             >
-                                <Text style={styles.cancelButtonText}>취소</Text>
+                                <Typography variant="bodyLgSemi" style={styles.cancelButtonText}>
+                                    취소
+                                </Typography>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={confirmDateSelection}
                                 style={[styles.modalButton, styles.confirmButton]}
                             >
-                                <Text style={styles.confirmButtonText}>확인</Text>
+                                <Typography variant="bodyLgSemi" style={styles.confirmButtonText}>
+                                    확인
+                                </Typography>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -228,7 +242,9 @@ const TodoFormScreen = () => {
                 onPress={handleSubmit}
                 style={styles.submitButton}
             >
-                <Text style={styles.submitButtonText}>저장하기</Text>
+                <Typography variant="titleBold" style={styles.submitButtonText}>
+                    저장하기
+                </Typography>
             </TouchableOpacity>
                 </View>
             </TouchableWithoutFeedback>
@@ -249,8 +265,6 @@ const styles = StyleSheet.create({
         marginBottom: 25,
     },
     label: {
-        fontSize: 16,
-        fontWeight: '600',
         color: INK,
         marginBottom: 10,
     },
@@ -260,7 +274,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 15,
         backgroundColor: WHITE,
-        fontSize: 16,
+        ...typography.input,
         color: INK,
         shadowColor: INK,
         shadowOffset: { width: 0, height: 1 },
@@ -283,8 +297,6 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     submitButtonText: {
-        fontSize: 18,
-        fontWeight: '700',
         color: WHITE,
     },
     dateButton: {
@@ -303,12 +315,9 @@ const styles = StyleSheet.create({
         elevation: 1,
     },
     dateButtonText: {
-        fontSize: 16,
         color: INK,
-        fontWeight: '500',
     },
     dateButtonIcon: {
-        fontSize: 18,
         color: INK_MUTED,
     },
     modalOverlay: {
@@ -344,8 +353,6 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
     },
     modalTitle: {
-        fontSize: 18,
-        fontWeight: '600',
         color: INK,
     },
     closeButton: {
@@ -359,9 +366,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     closeButtonText: {
-        fontSize: 16,
         color: INK,
-        fontWeight: '600',
     },
     datePickerContainer: {
         padding: 20,
@@ -391,13 +396,9 @@ const styles = StyleSheet.create({
         backgroundColor: INK,
     },
     cancelButtonText: {
-        fontSize: 16,
-        fontWeight: '600',
         color: INK_MUTED,
     },
     confirmButtonText: {
-        fontSize: 16,
-        fontWeight: '600',
         color: WHITE,
     },
 })
