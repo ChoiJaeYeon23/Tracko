@@ -21,7 +21,7 @@ import {
     SCRIM,
     LEDGER_ROW_INCOME,
 } from '../../constants/appColors'
-import { formatKrw } from '../../utils/formatKrw'
+import { formatKrw, formatKrwInputText } from '../../utils/formatKrw'
 import { typography } from '../../theme/typography'
 
 type Props = {
@@ -47,9 +47,11 @@ const ExpenseSummary = ({
     const [draft, setDraft] = useState('')
 
     const openBudget = () => {
-        setDraft(budget > 0 ? String(budget) : '')
+        setDraft(budget > 0 ? formatKrw(budget) : '')
         setBudgetModal(true)
     }
+
+    const onDraftChange = (text: string) => setDraft(formatKrwInputText(text))
 
     const saveBudget = () => {
         const n = Number(String(draft).replace(/[^0-9]/g, ''))
@@ -151,9 +153,9 @@ const ExpenseSummary = ({
                         <Text style={styles.dialogTitle}>한 달 예산 (원)</Text>
                         <TextInput
                             value={draft}
-                            onChangeText={setDraft}
+                            onChangeText={onDraftChange}
                             keyboardType="number-pad"
-                            placeholder="예: 500000"
+                            placeholder="예: 1,000,000"
                             placeholderTextColor={PLACEHOLDER}
                             style={styles.input}
                         />

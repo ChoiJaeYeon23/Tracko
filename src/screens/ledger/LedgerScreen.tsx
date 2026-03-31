@@ -12,7 +12,6 @@ import ExpenseSummary from './ExpenseSummary'
 import CategoryList from './CategoryList'
 import AddExpenseButton from './AddExpenseButton'
 import AddExpenseModal from './AddExpenseModal'
-import CustomCategoriesSection from './CustomCategoriesSection'
 import LedgerSpendingCalendar from './LedgerSpendingCalendar'
 import LedgerDayExpenses from './LedgerDayExpenses'
 import { Header } from '../../components'
@@ -121,10 +120,6 @@ const LedgerScreen = () => {
                         spentPercent={spentPercent}
                         displayPercent={displayPercent}
                         onSaveBudget={updateBudget}
-                    />
-                    <CustomCategoriesSection
-                        items={customCategories}
-                        onRemove={removeCustomCategory}
                     />
                     <CategoryList
                         aggregates={categoryAggregates}
